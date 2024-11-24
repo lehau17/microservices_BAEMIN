@@ -1,0 +1,43 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+
+model restaurant_ratings {
+  id               Int          @id @default(autoincrement())
+  user_id          Int?
+  res_id           Int?
+  res_rate_point   Int?
+  res_rate_comment String?
+  status           Int?
+  created_at       DateTime?    @default(now()) @db.Timestamp(6)
+  updated_at       DateTime?    @default(now()) @db.Timestamp(6)
+  restaurants      restaurants? @relation(fields: [res_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model restaurants {
+  id                 Int                  @id 
+  res_name           String               @db.VarChar
+  res_address        Json
+  res_avg_rating     Float?               @default(4.5) @db.Real
+  res_time_start     String?              @default("10.00") @db.VarChar
+  res_time_end       String?              @default("22.00") @db.VarChar
+  res_total_rating   Int?                 @default(0)
+  status             Int?                 @default(1)
+  created_at         DateTime?            @default(now()) @db.Timestamp(6)
+  updated_at         DateTime?            @default(now()) @db.Timestamp(6)
+  res_description    String?
+  restaurant_ratings restaurant_ratings[]
+}

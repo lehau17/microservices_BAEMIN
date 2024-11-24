@@ -1,0 +1,84 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+
+
+model categories {
+  id               Int       @id @default(autoincrement())
+  cate_name        String?   @db.VarChar
+  cate_description String?
+  cate_icon        String?   @db.VarChar
+  status           Int?
+  created_at       DateTime? @default(now()) @db.Timestamp(6)
+  updated_at       DateTime? @default(now()) @db.Timestamp(6)
+  foods            foods[]
+  @@index([cate_name])
+}
+
+model food_likes {
+  id         Int       @id @default(autoincrement())
+  user_id    Int?
+  food_id    Int?
+  status     Int?
+  created_at DateTime? @default(now()) @db.Timestamp(6)
+  updated_at DateTime? @default(now()) @db.Timestamp(6)
+  foods      foods?    @relation(fields: [food_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  @@index([user_id])
+}
+
+model food_ratings {
+  id                Int       @id @default(autoincrement())
+  user_id           Int?
+  food_id           Int?
+  food_rate_point   Int?
+  food_rate_comment String?
+  status            Int?      @default(1)
+  created_at        DateTime? @default(now()) @db.Timestamp(6)
+  updated_at        DateTime? @default(now()) @db.Timestamp(6)
+  foods             foods?    @relation(fields: [food_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  @@index([user_id])
+  @@index([food_rate_point])
+}
+
+model foods {
+  id                Int             @id @default(autoincrement())
+  res_id            Int?
+  cate_id           Int?
+  food_name         String?         @db.VarChar(255)
+  food_description  String?
+  food_images       String?         @db.VarChar
+  food_total_like   Int?            @default(0)
+  food_total_rating Int?            @default(0)
+  food_avg_rating   Int?            @default(0)
+  status            Int?            @default(1)
+  created_at        DateTime?       @default(now()) @db.Timestamp(6)
+  updated_at        DateTime?       @default(now()) @db.Timestamp(6)
+  food_likes        food_likes[]
+  food_ratings      food_ratings[]
+  categories        categories?     @relation(fields: [cate_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  foods_details     foods_details?
+  @@index([food_name, food_description])
+  @@index([food_total_rating])
+}
+
+model foods_details {
+  id         Int   @id
+  food_price Float
+  food_stock Int
+  foods      foods @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_food")
+  @@index([food_price])
+  @@index([food_stock])
+}
