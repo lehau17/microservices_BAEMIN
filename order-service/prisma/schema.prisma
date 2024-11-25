@@ -51,7 +51,7 @@ model vouchers {
   minimum_order    Float?
   valid_from       DateTime  @db.Timestamp(6)
   valid_to         DateTime  @db.Timestamp(6)
-  status           Int?
+  status           Int? @default(1)
   created_at       DateTime? @default(now()) @db.Timestamp(6)
   updated_at       DateTime? @default(now()) @db.Timestamp(6)
   @@index([code])
