@@ -102,12 +102,10 @@ export class FoodService {
   }
 
   async findOne(id: number) {
-    console.log('dô đây', id);
     const foundFood = await this.prisma.foods.findFirst({
       where: { id },
       include: { foods_details: true },
     });
-    console.log('check food found', foundFood);
     return foundFood;
   }
 
@@ -244,10 +242,37 @@ export class FoodService {
   }
 
   async remove(id: number) {
+    const foundFood = await this.findOne(id);
+    if (!foundFood || foundFood.status === 0) {
+      throw new RpcException({
+        message: 'food not found',
+        statusCode: HttpStatus.BAD_REQUEST,
+      });
+    }
     return this.prisma.foods.update({
-      where: { id },
+      where: {
+        id: id,
+      },
       data: {
         status: 0,
+      },
+    });
+  }
+
+  async desStock({ food_id, quantity }: { food_id: number; quantity: number }) {
+    const foundFood = await this.findOne(food_id);
+    if (!foundFood || foundFood.status === 0) {
+      throw new RpcException({
+        message: 'food not found',
+        statusCode: HttpStatus.BAD_REQUEST,
+      });
+    }
+    return this.prisma.foods_details.update({
+      where: { id: food_id },
+      data: {
+        food_stock: {
+          decrement: quantity,
+        },
       },
     });
   }

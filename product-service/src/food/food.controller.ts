@@ -45,4 +45,9 @@ export class FoodController {
   remove(@Payload() id: number) {
     return this.foodService.remove(id);
   }
+
+  @MessagePattern('desStock')
+  updateStock(@Payload() payload: { food_id: number; quantity: number }) {
+    return this.foodService.desStock(payload);
+  }
 }

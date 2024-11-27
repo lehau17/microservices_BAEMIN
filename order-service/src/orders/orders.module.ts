@@ -18,6 +18,20 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         },
       },
     ]),
+    ClientsModule.register([
+      {
+        name: 'PRODUCT_SERVICE',
+        transport: Transport.RMQ,
+        options: {
+          urls: ['amqp://admin:1234@localhost:5672'],
+          queue: 'product_queue',
+          queueOptions: {
+            durable: true,
+          },
+          persistent: false,
+        },
+      },
+    ]),
   ],
   controllers: [OrdersController],
   providers: [],
