@@ -4,7 +4,8 @@ import { UpdateCartItemDto } from './dto/update-cart_item.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { UserService } from 'src/user/user.service';
-import { lastValueFrom } from 'rxjs';
+import { lastValueFrom, retry, timeout, catchError } from 'rxjs';
+import { FindFoodDto } from './dto/food.dto';
 
 @Injectable()
 export class CartItemsService {
@@ -140,10 +141,22 @@ export class CartItemsService {
         statusCode: HttpStatus.BAD_REQUEST,
       });
     }
-    return this.prismaService.cart_items.findMany({
+    const cartItem = await this.prismaService.cart_items.findMany({
       where: {
         cart_id: user_id,
       },
     });
+    const foodIds = cartItem.map((item) => item.food_id);
+    if (foodIds.length > 0) {
+      const foods = await lastValueFrom(
+        this.productService
+          .send('listFoodsByIds', foodIds)
+          .pipe(retry(4), timeout(4000)),
+      );
+      return cartItem.map((item) => {
+        return { ...item, food: foods[item.food_id] || {} };
+      });
+    }
+    return cartItem;
   }
 }

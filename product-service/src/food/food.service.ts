@@ -251,4 +251,24 @@ export class FoodService {
       },
     });
   }
+
+  async findFoodsByIds(foodsIds: number[]) {
+    const foundFoods = await this.prisma.foods.findMany({
+      where: {
+        id: {
+          in: foodsIds,
+        },
+      },
+      include: {
+        foods_details: true,
+      },
+    });
+
+    const foodMap = {};
+    foundFoods.forEach((food) => {
+      foodMap[food.id] = food;
+    });
+    console.log('check', foodMap);
+    return foodMap;
+  }
 }

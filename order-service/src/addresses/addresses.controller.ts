@@ -23,6 +23,11 @@ export class AddressesController {
     return this.addressesService.updateAddress(updateAddressDto);
   }
 
+  @MessagePattern('findAddress')
+  findOne(@Payload() id: number) {
+    return this.addressesService.findOne(id);
+  }
+
   @MessagePattern('removeAddress')
   remove(@Payload() id: number) {
     return this.addressesService.deleteAddress(id);

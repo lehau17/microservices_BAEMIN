@@ -12,6 +12,10 @@ import { FoodModule } from './food/food.module';
 import { FoodLikesModule } from './food_likes/food_likes.module';
 import { FoodRatingsModule } from './food_ratings/food_ratings.module';
 import { CartsModule } from './carts/carts.module';
+import { UploadModule } from './upload/upload.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { VouchersModule } from './vouchers/vouchers.module';
+import { AddressesModule } from './addresses/addresses.module';
 
 @Global()
 @Module({
@@ -30,6 +34,18 @@ import { CartsModule } from './carts/carts.module';
         },
       },
       {
+        name: 'UPLOAD_SERVICE',
+        transport: Transport.RMQ,
+        options: {
+          urls: ['amqp://admin:1234@localhost:5672'],
+          queue: 'upload_queue',
+          queueOptions: {
+            durable: false,
+          },
+          persistent: true,
+        },
+      },
+      {
         name: 'CART_SERVICE',
         transport: Transport.RMQ,
         options: {
@@ -41,8 +57,23 @@ import { CartsModule } from './carts/carts.module';
           persistent: true,
         },
       },
+      {
+        name: 'ORDER_SERVICE',
+        transport: Transport.RMQ,
+        options: {
+          urls: ['amqp://admin:1234@localhost:5672'],
+          queue: 'order_queue',
+          queueOptions: {
+            durable: false,
+          },
+          persistent: true,
+        },
+      },
     ]),
     AuthModule,
+    ServeStaticModule.forRoot({
+      rootPath: '.',
+    }),
     ConfigModule.forRoot({ isGlobal: true }),
     RestaurantModule,
     RestaurantRatingModule,
@@ -51,6 +82,9 @@ import { CartsModule } from './carts/carts.module';
     FoodLikesModule,
     FoodRatingsModule,
     CartsModule,
+    UploadModule,
+    VouchersModule,
+    AddressesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

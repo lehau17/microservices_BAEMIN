@@ -30,6 +30,12 @@ export class FoodController {
     return this.foodService.findOne(id);
   }
 
+  @MessagePattern('listFoodsByIds')
+  findFoodsByIds(@Payload() foodsId: number[]) {
+    console.log('vao product');
+    return this.foodService.findFoodsByIds(foodsId);
+  }
+
   @MessagePattern('updateFood')
   update(@Payload() updateFoodDto: UpdateFoodDto) {
     return this.foodService.update(updateFoodDto.id, updateFoodDto);

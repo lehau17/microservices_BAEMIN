@@ -3,7 +3,7 @@ import { MessagePattern, Payload } from '@nestjs/microservices';
 import { VouchersService } from './vouchers.service';
 import { CreateVoucherDto } from './dto/create-voucher.dto';
 import { UpdateVoucherDto } from './dto/update-voucher.dto';
-import { PagingDto } from 'src/common/dto/paging.dto';
+import { FindVoucherDto } from './dto/find-vopucher.dto';
 
 @Controller()
 export class VouchersController {
@@ -15,7 +15,7 @@ export class VouchersController {
   }
 
   @MessagePattern('findAllVouchers')
-  findAll(@Payload() paging: PagingDto) {
+  findAll(@Payload() paging: FindVoucherDto) {
     return this.vouchersService.findAll(paging);
   }
 

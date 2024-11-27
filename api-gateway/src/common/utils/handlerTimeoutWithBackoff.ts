@@ -34,15 +34,11 @@ export function handleRetryWithBackoff<T>(
       ),
       catchError((err) => {
         // Bắt lỗi và xử lý chúng
-        console.error('Caught error:', err);
         throw err; // Ném lại lỗi nếu cần hoặc xử lý theo cách khác
       }),
     );
 }
 
-/**
- * Kiểm tra xem lỗi có phải là lỗi từ server hoặc lỗi có thể retry được.
- */
 function isRetryableError(error: any): boolean {
   if (error instanceof Error) {
     // Nếu là lỗi Timeout (ví dụ: từ `timeout()`), có thể retry lại
