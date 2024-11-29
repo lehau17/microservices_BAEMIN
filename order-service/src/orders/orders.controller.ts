@@ -1,29 +1,43 @@
-import { Controller } from '@nestjs/common';
+import { Controller, UseFilters } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
+import { OrdersService } from './orders.service';
 
 @Controller()
 export class OrdersController {
-  // constructor(private readonly ordersService: OrderSer) {}
-  // @MessagePattern('createOrder')
-  // create(@Payload() createOrderDto: CreateOrderDto) {
-  //   return this.ordersService.create(createOrderDto);
-  // }
-  // @MessagePattern('findAllOrders')
-  // findAll() {
-  //   return this.ordersService.findAll();
-  // }
-  // @MessagePattern('findOneOrder')
-  // findOne(@Payload() id: number) {
-  //   return this.ordersService.findOne(id);
-  // }
-  // @MessagePattern('updateOrder')
-  // update(@Payload() updateOrderDto: UpdateOrderDto) {
-  //   return this.ordersService.update(updateOrderDto.id, updateOrderDto);
-  // }
-  // @MessagePattern('removeOrder')
-  // remove(@Payload() id: number) {
-  //   return this.ordersService.remove(id);
-  // }
+  constructor(private readonly ordersService: OrdersService) {}
+  @MessagePattern('createOrder')
+  create(@Payload() createOrderDto: CreateOrderDto) {
+    return this.ordersService.create(createOrderDto);
+  }
+  @MessagePattern('findAllOrdersByUser')
+  findAll(@Payload() user_id: number) {
+    return this.ordersService.findAllByUserId(user_id);
+  }
+  @MessagePattern('findOneOrder')
+  findOne(@Payload() id: number) {
+    return this.ordersService.findOne(id);
+  }
+  @MessagePattern('updateOrderByUser')
+  update(@Payload() updateOrderDto: UpdateOrderDto) {
+    return this.ordersService.update(updateOrderDto);
+  }
+
+  @MessagePattern('changeStateOrder')
+  changeState(
+    @Payload()
+    payload: {
+      user_id: number;
+      order_id: number;
+      status: number;
+    },
+  ) {
+    return this.ordersService.changeStateOrder(payload);
+  }
+
+  @MessagePattern('removeOrderByUser')
+  remove(@Payload() payload: { user_id: number; order_id: number }) {
+    return this.ordersService.remove(payload);
+  }
 }

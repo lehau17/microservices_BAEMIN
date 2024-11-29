@@ -16,10 +16,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { UserDTO } from 'src/common/dto/response.dto';
 import { TokenPayload } from 'src/common/dto/tokenPayload.jwt.dto';
-import { CreateRestaurantDto } from './dto/createRestaurant.dto';
-import { lastValueFrom } from 'rxjs';
-import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
-import { handleServiceCall } from 'src/common/utils/handleServiceCall';
+
 import { CartsService } from 'src/carts/carts.service';
 
 @Injectable()
@@ -29,6 +26,7 @@ export class UserService {
     private jwtService: JwtService,
     private configService: ConfigService,
     private cartService: CartsService,
+    @Inject('MAIL_SERVICE') private mailService: ClientProxy,
   ) {}
   create(createUserDto: CreateUserDto) {
     //check email
@@ -117,14 +115,15 @@ export class UserService {
   }
 
   async register(createUserDto: CreateUserDto) {
+    console.log(createUserDto);
     //fimd by email
     const foundUser = await this.prisma.users.findFirst({
       where: {
         usr_email: createUserDto.usr_email,
-        usr_username: createUserDto.usr_username,
       },
     });
-    if (foundUser) {
+    console.log(foundUser);
+    if (foundUser && foundUser.usr_username === createUserDto.usr_username) {
       throw new RpcException({
         message: 'Email or username already exists',
         statusCode: 400, // Mã lỗi tùy chỉnh
@@ -146,6 +145,15 @@ export class UserService {
     });
     // create cart
     await this.cartService.create(newUser.id);
+    this.mailService.emit('sendMail', {
+      to: newUser.usr_email,
+      context: {
+        name: newUser.usr_username,
+        actionUrl: 'locahost:3000',
+      },
+      subject: 'Welcome to My E-Commerce',
+      template: './welcome.hbs',
+    });
     return newUser;
   }
 

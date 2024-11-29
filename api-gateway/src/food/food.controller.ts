@@ -22,7 +22,6 @@ export class FoodController {
   @Post()
   @UseGuards(AccessTokenGuard)
   create(@Body() createFoodDto: CreateFoodDto, @Req() req) {
-    console.log('Check user', req.user);
     return this.foodService.create(createFoodDto, req.user.sub);
   }
 

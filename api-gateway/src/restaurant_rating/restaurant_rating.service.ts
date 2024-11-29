@@ -4,7 +4,6 @@ import { UpdateRestaurantRatingDto } from './dto/update-restaurant_rating.dto';
 import { ClientProxy } from '@nestjs/microservices';
 import { lastValueFrom } from 'rxjs';
 import { handleRetryWithBackoff } from 'src/common/utils/handlerTimeoutWithBackoff';
-import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class RestaurantRatingService {

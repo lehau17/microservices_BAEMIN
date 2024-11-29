@@ -1,4 +1,3 @@
-import { PacketId } from './../../../product-service/node_modules/@nestjs/microservices/interfaces/packet.interface.d';
 import { Inject, Injectable } from '@nestjs/common';
 import { CreateCartDto } from './dto/create-cart.dto';
 import { UpdateCartDto } from './dto/update-cart.dto';

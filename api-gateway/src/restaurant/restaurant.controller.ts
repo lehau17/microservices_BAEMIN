@@ -1,4 +1,3 @@
-import { PagingDto } from './../../../res-service/src/common/dto/paging.dto';
 import {
   Body,
   Controller,
@@ -16,6 +15,7 @@ import { AccessTokenGuard } from 'src/common/guards/accessToken.guard';
 import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
 import { RolesGuard } from 'src/common/guards/roles.guard';
 import { Roles } from 'src/common/demos/roles.decorator';
+import { PagingDto } from 'src/common/dto/paging.dto';
 
 @Controller('restaurants')
 export class RestaurantController {

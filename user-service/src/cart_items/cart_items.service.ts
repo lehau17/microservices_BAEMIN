@@ -27,7 +27,6 @@ export class CartItemsService {
         },
       }),
     ]);
-    console.log('check found food', foundFood);
     if (!foundFood || foundFood.status === 0) {
       throw new RpcException({
         message: 'not found food',
@@ -40,8 +39,15 @@ export class CartItemsService {
         statusCode: HttpStatus.BAD_REQUEST,
       });
     }
+    if (foundFood.foods_details.food_stock < payload.quantity) {
+      throw new RpcException({
+        message: ' out of stock',
+        statusCode: HttpStatus.BAD_REQUEST,
+      });
+    }
+    let newItem = null;
     if (foundCartItem) {
-      return this.prismaService.cart_items.update({
+      newItem = await this.prismaService.cart_items.update({
         where: {
           id: foundCartItem.id,
         },
@@ -50,11 +56,11 @@ export class CartItemsService {
           updated_at: new Date(),
           price:
             (foundCartItem.quantity + payload.quantity) *
-            foundFood.foundFood.foods_details.food_price,
+            foundFood.foods_details.food_price,
         },
       });
     }
-    return this.prismaService.cart_items.create({
+    newItem = await this.prismaService.cart_items.create({
       data: {
         food_id: foundFood.id,
         carts: {
@@ -67,6 +73,8 @@ export class CartItemsService {
         price: payload.quantity * foundFood.foods_details.food_price,
       },
     });
+
+    return newItem;
   }
 
   // Update a cart item by ID
@@ -158,5 +166,16 @@ export class CartItemsService {
       });
     }
     return cartItem;
+  }
+
+  removeItems({ user_id, food_id }: { user_id: number; food_id: number[] }) {
+    return this.prismaService.cart_items.deleteMany({
+      where: {
+        cart_id: user_id,
+        food_id: {
+          in: food_id,
+        },
+      },
+    });
   }
 }

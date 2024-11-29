@@ -277,6 +277,14 @@ export class FoodService {
     });
   }
 
+  async desManyStock(payload: { food_id: number; quantity: number }[]) {
+    const promiseHandler = payload.map((item) => {
+      return this.desStock(item);
+    });
+    const result = await Promise.all(promiseHandler);
+    return result.length > 0;
+  }
+
   async findFoodsByIds(foodsIds: number[]) {
     const foundFoods = await this.prisma.foods.findMany({
       where: {

@@ -31,4 +31,11 @@ export class CartItemsController {
   remove(@Payload() { id, user_id }: { id: number; user_id: number }) {
     return this.cartItemsService.remove(id, user_id);
   }
+
+  @MessagePattern('removeItemsWhenOrderSuccess')
+  removeItemWhenOrderSuccess(
+    @Payload() { user_id, food_id }: { user_id: number; food_id: number[] },
+  ) {
+    return this.cartItemsService.removeItems({ user_id, food_id });
+  }
 }

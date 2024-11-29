@@ -16,6 +16,7 @@ import { UploadModule } from './upload/upload.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { VouchersModule } from './vouchers/vouchers.module';
 import { AddressesModule } from './addresses/addresses.module';
+import { OrdersModule } from './orders/orders.module';
 
 @Global()
 @Module({
@@ -25,7 +26,9 @@ import { AddressesModule } from './addresses/addresses.module';
         name: 'USER_SERVICE',
         transport: Transport.RMQ,
         options: {
-          urls: ['amqp://admin:1234@localhost:5672'],
+          urls: [
+            `amqp://${process.env.RABBITMQ_USER || 'admin'}:${process.env.RABBITMQ_PASSWORD || '1234'}@${process.env.RABBITMQ_HOST || 'some-rabbit'}:5672`,
+          ],
           queue: 'user_queue',
           queueOptions: {
             durable: true,
@@ -37,7 +40,9 @@ import { AddressesModule } from './addresses/addresses.module';
         name: 'UPLOAD_SERVICE',
         transport: Transport.RMQ,
         options: {
-          urls: ['amqp://admin:1234@localhost:5672'],
+          urls: [
+            `amqp://${process.env.RABBITMQ_USER || 'admin'}:${process.env.RABBITMQ_PASSWORD || '1234'}@${process.env.RABBITMQ_HOST || 'some-rabbit'}:5672`,
+          ],
           queue: 'upload_queue',
           queueOptions: {
             durable: false,
@@ -49,7 +54,9 @@ import { AddressesModule } from './addresses/addresses.module';
         name: 'CART_SERVICE',
         transport: Transport.RMQ,
         options: {
-          urls: ['amqp://admin:1234@localhost:5672'],
+          urls: [
+            `amqp://${process.env.RABBITMQ_USER || 'admin'}:${process.env.RABBITMQ_PASSWORD || '1234'}@${process.env.RABBITMQ_HOST || 'some-rabbit'}:5672`,
+          ],
           queue: 'cart_queue',
           queueOptions: {
             durable: true,
@@ -61,10 +68,26 @@ import { AddressesModule } from './addresses/addresses.module';
         name: 'ORDER_SERVICE',
         transport: Transport.RMQ,
         options: {
-          urls: ['amqp://admin:1234@localhost:5672'],
+          urls: [
+            `amqp://${process.env.RABBITMQ_USER || 'admin'}:${process.env.RABBITMQ_PASSWORD || '1234'}@${process.env.RABBITMQ_HOST || 'some-rabbit'}:5672`,
+          ],
           queue: 'order_queue',
           queueOptions: {
             durable: false,
+          },
+          persistent: true,
+        },
+      },
+      {
+        name: 'MAIL_SERVICE',
+        transport: Transport.RMQ,
+        options: {
+          urls: [
+            `amqp://${process.env.RABBITMQ_USER || 'admin'}:${process.env.RABBITMQ_PASSWORD || '1234'}@${process.env.RABBITMQ_HOST || 'some-rabbit'}:5672`,
+          ],
+          queue: 'mail_queue',
+          queueOptions: {
+            durable: true,
           },
           persistent: true,
         },
@@ -85,6 +108,7 @@ import { AddressesModule } from './addresses/addresses.module';
     UploadModule,
     VouchersModule,
     AddressesModule,
+    OrdersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

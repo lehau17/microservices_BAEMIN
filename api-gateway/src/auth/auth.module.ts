@@ -16,7 +16,9 @@ import { ConfigService } from '@nestjs/config';
         name: 'USER_SERVICE',
         transport: Transport.RMQ,
         options: {
-          urls: ['amqp://admin:1234@localhost:5672'],
+          urls: [
+            `amqp://${process.env.RABBITMQ_USER || 'admin'}:${process.env.RABBITMQ_PASSWORD || '1234'}@${process.env.RABBITMQ_HOST || 'some-rabbit'}:5672`,
+          ],
           queue: 'user_queue',
           queueOptions: {
             durable: true,

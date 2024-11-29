@@ -47,7 +47,7 @@ export class FoodController {
   }
 
   @MessagePattern('desStock')
-  updateStock(@Payload() payload: { food_id: number; quantity: number }) {
-    return this.foodService.desStock(payload);
+  updateStock(@Payload() payload: { food_id: number; quantity: number }[]) {
+    return this.foodService.desManyStock(payload);
   }
 }

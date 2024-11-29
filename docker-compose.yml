@@ -1,0 +1,92 @@
+version: "3"
+
+services:
+  api-gateway:
+    container_name: api-gateway
+    build: ./api-gateway
+    ports:
+      - 3000:3000
+    networks:
+      - node-network
+    depends_on:
+      - rabbitmq
+
+  notify-service:
+    container_name: notify-service
+    build: ./notify-service
+    networks:
+      - node-network
+    depends_on:
+      - postgres
+
+  order-service:
+    container_name: order-service
+    build: ./order-service
+    networks:
+      - node-network
+    depends_on:
+      - postgres
+
+  product-service:
+    container_name: product-service
+    build: ./product-service
+    networks:
+      - node-network
+    depends_on:
+      - postgres
+
+  res-service:
+    container_name: res-service
+    build: ./res-service
+    networks:
+      - node-network
+    depends_on:
+      - postgres
+
+  upload-service:
+    container_name: upload-service
+    build: ./upload-service
+    networks:
+      - node-network
+
+  user-service:
+    container_name: user-service
+    build: ./user-service
+    networks:
+      - node-network
+    depends_on:
+      - postgres
+
+  postgres:
+    container_name: some-ostgres
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+    ports:
+      - 5432:5432
+    networks:
+      - node-network
+    volumes:
+      - ./volumes/postgres/data:/var/lib/postgresql/data
+      - ./volumes/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  rabbitmq:
+    container_name: some-rabbit
+    image: rabbitmq:3-management
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: 1234
+    ports:
+      - 5672:5672
+      - 15672:15672
+    networks:
+      - node-network
+
+networks:
+  node-network:
+    external: true
+
+volumes:
+  postgres-data:
+    driver: local
