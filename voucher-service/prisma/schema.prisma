@@ -1,0 +1,45 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum discountType {
+  percent
+  cash
+}
+
+enum voucherType{
+  shop
+  system
+}
+model vouchers {
+  id                   Int         @id @default(autoincrement())
+  vchr_code            String      @unique
+  vchr_discount_type   discountType      // Loại giảm giá (% hoặc tiền mặt)
+  vchr_discount_value  Float       // Giá trị giảm giá
+  vchr_expiration_date DateTime    // Ngày hết hạn
+  vchr_voucher_type    voucherType      // System hoặc Shop
+  vchr_is_active       Boolean     @default(true)
+  vchr_min_purchase_amount Float?  @default(0)// Số tiền tối thiểu để áp dụng 
+  vchr_max_discount    Float?      // Giảm giá tối đa
+  shop_id  Int?
+  vchr_createdAt       DateTime    @default(now())
+  vchr_updatedAt       DateTime    @updatedAt
+  voucherUsage         voucher_usage[] 
+  @@index([vchr_code])
+}
+
+model voucher_usage {
+  id                Int       @id @default(autoincrement())
+  voucher_id        Int
+  user_id           Int       // Mã người dùng
+  order_id          Int       // Mã đơn hàng
+  vchru_usage_date         DateTime  // Ngày sử dụng voucher
+  vchru_discount_applied   Float     // Mức giảm giá thực tế được áp dụng
+  status            Int       // Trạng thái sử dụng voucher
+  vchru_voucher           vouchers   @relation(fields: [voucher_id], references: [id]) // Sử dụng tên "Voucher" để tham chiếu đến model Voucher
+}

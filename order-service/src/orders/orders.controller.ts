@@ -3,10 +3,17 @@ import { MessagePattern, Payload } from '@nestjs/microservices';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { OrdersService } from './orders.service';
+import { FindOrderByRestaurantDto } from './dto/find-order-by-restaurant.dto';
 
 @Controller()
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
+
+  @MessagePattern('findOrderByShop')
+  findOrderByRestaurant(@Payload() payload: FindOrderByRestaurantDto) {
+    return this.ordersService.findOrderByRes(payload);
+  }
+
   @MessagePattern('createOrder')
   create(@Payload() createOrderDto: CreateOrderDto) {
     return this.ordersService.create(createOrderDto);

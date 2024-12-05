@@ -8,6 +8,7 @@ import {
   Delete,
   Req,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -16,6 +17,8 @@ import { AccessTokenGuard } from 'src/common/guards/accessToken.guard';
 import { Roles } from 'src/common/demos/roles.decorator';
 import { RolesGuard } from 'src/common/guards/roles.guard';
 import { ChangeStateOrderDto } from './dto/change-state-order.dto';
+import { PagingDto } from 'src/common/dto/paging.dto';
+import { FindOrderByResDto } from './dto/find-order-by-res.dto';
 
 @Controller('orders')
 export class OrdersController {
@@ -31,6 +34,19 @@ export class OrdersController {
   @UseGuards(AccessTokenGuard)
   findAll(@Req() req) {
     return this.ordersService.findAll(req.user.sub);
+  }
+
+  @Get('/find-order-of-me')
+  @UseGuards(AccessTokenGuard)
+  findOrderOfMyShop(@Req() req, @Query() paging: PagingDto) {
+    return this.ordersService.findOrderByShop(req.user.sub, paging);
+  }
+
+  @Get('/find-order-by-res')
+  @Roles(['SHOP', 'ADMIN', 'SUPERADMIN'])
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  findOrderByShop(@Body() body: FindOrderByResDto, @Query() paging: PagingDto) {
+    return this.ordersService.findOrderByShop(body.owner_id, paging);
   }
 
   @Get(':id')

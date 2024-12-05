@@ -4,23 +4,22 @@ import { UpdateVoucherDto } from './dto/update-voucher.dto';
 import { ClientProxy } from '@nestjs/microservices';
 import { lastValueFrom } from 'rxjs';
 import { handleRetryWithBackoff } from 'src/common/utils/handlerTimeoutWithBackoff';
-import { PagingDto } from 'src/common/dto/paging.dto';
 import { FindVoucherDto } from './dto/find-vopucher.dto';
 
 @Injectable()
 export class VouchersService {
-  constructor(@Inject('ORDER_SERVICE') private orderService: ClientProxy) {}
-  create(createVoucherDto: CreateVoucherDto) {
+  constructor(@Inject('USER_SERVICE') private userService: ClientProxy) {}
+  create(createVoucherDto: CreateVoucherDto, shop_id: number) {
     return lastValueFrom(
-      this.orderService
-        .send('createVoucher', createVoucherDto)
+      this.userService
+        .send('createVoucher', { ...createVoucherDto, shop_id })
         .pipe(handleRetryWithBackoff(3, 1000)),
     );
   }
 
   findAll(paging: FindVoucherDto) {
     return lastValueFrom(
-      this.orderService
+      this.userService
         .send('findAllVouchers', paging)
         .pipe(handleRetryWithBackoff(3, 1000)),
     );
@@ -28,7 +27,7 @@ export class VouchersService {
 
   findOne(id: number) {
     return lastValueFrom(
-      this.orderService
+      this.userService
         .send('findOneVoucher', id)
         .pipe(handleRetryWithBackoff(3, 1000)),
     );
@@ -36,7 +35,7 @@ export class VouchersService {
 
   update(id: number, updateVoucherDto: UpdateVoucherDto) {
     return lastValueFrom(
-      this.orderService
+      this.userService
         .send('updateVoucher', { id, ...updateVoucherDto })
         .pipe(handleRetryWithBackoff(3, 1000)),
     );
@@ -44,7 +43,7 @@ export class VouchersService {
 
   remove(id: number) {
     return lastValueFrom(
-      this.orderService
+      this.userService
         .send('removeVoucher', id)
         .pipe(handleRetryWithBackoff(3, 1000)),
     );

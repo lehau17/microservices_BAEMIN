@@ -6,18 +6,17 @@ import { MessagePattern, Payload } from '@nestjs/microservices';
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @MessagePattern("healcheck")
+  @MessagePattern('healcheck')
   healcheck(@Payload() data) {
-    console.log("check data", data)
+    console.log('check data', data);
     setTimeout(() => {
-      console.log("time out")
-    }, 2000)
-    return "healcheck:oke"
+      console.log('time out');
+    }, 2000);
+    return 'healcheck:oke';
   }
 
-
-    @MessagePattern("login")
+  @MessagePattern('login')
   login(@Payload() data) {
-    return data
+    return data;
   }
 }

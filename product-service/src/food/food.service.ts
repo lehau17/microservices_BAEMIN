@@ -1,22 +1,20 @@
-import {
-  BadRequestException,
-  HttpStatus,
-  Inject,
-  Injectable,
-} from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { foods, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateFoodDto } from './dto/create-food.dto';
 import DataResponse from './dto/find_food.dto';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { lastValueFrom } from 'rxjs';
 import { UpdateFoodDto } from './dto/update-food.dto';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 
 @Injectable()
 export class FoodService {
   constructor(
     private prisma: PrismaService,
     @Inject('RESTAURANT_SERVICE') private restaurantService: ClientProxy,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   async create(data: CreateFoodDto) {
@@ -45,7 +43,7 @@ export class FoodService {
         food_images: data.food_images,
         food_name: data.food_name,
         categories: {
-          connect: { id: foundCate.id }, // Kết nối với danh mục có id = 1 trong bảng categories
+          connect: { id: foundCate.id },
         },
         res_id: data.user_id,
       },
@@ -55,13 +53,16 @@ export class FoodService {
         message: 'error occurred creating',
         statusCode: HttpStatus.BAD_REQUEST,
       });
-    await this.prisma.foods_details.create({
-      data: {
-        id: newFood.id,
-        food_price: data.food_price,
-        food_stock: data.food_stock || 0,
-      },
-    });
+    await Promise.all([
+      await this.prisma.foods_details.create({
+        data: {
+          id: newFood.id,
+          food_price: data.food_price,
+          food_stock: data.food_stock || 0,
+        },
+      }),
+      await this.cacheManager.reset(),
+    ]);
     return newFood;
   }
 
@@ -74,6 +75,22 @@ export class FoodService {
     skip?: number;
     cursor?: number;
   }) {
+    const result: foods[] = await this.cacheManager.get(
+      `foods:cursor:${cursor ? cursor : 0}:page:${cursor ? 0 : skip / limit + 1}`,
+    );
+    if (result) {
+      return {
+        data: result,
+        filter: {
+          limit,
+          skip,
+        },
+        cursor: {
+          prevCursor: cursor,
+          nextCursor: result.length > limit ? result[length - 1].id : null,
+        },
+      };
+    }
     const options: Prisma.foodsFindManyArgs = {
       take: limit,
       where: {
@@ -88,6 +105,10 @@ export class FoodService {
       options.skip = skip;
     }
     const data = await this.prisma.foods.findMany(options);
+    this.cacheManager.set(
+      `foods:cursor:${cursor ? cursor : 0}:page:${cursor ? 0 : skip / limit + 1}`,
+      data,
+    );
     return {
       data: data,
       filter: {
@@ -128,43 +149,6 @@ export class FoodService {
     from_price?: number;
     to_price?: number;
   }) {
-    // const options: Prisma.foodsFindManyArgs = {
-    //   take: limit,
-    //   include: {
-    //     foods_details: {
-    //       where: {
-    //         food_price: {
-    //           gt: from_price,
-    //         },
-    //       },
-    //     },
-    //   },
-    //   orderBy: c_time
-    //     ? {
-    //       created_at: c_time == 1 ? 'desc' : 'asc',
-    //     }
-    //     : undefined,
-    //   where: {
-    //     status: 1,
-    //     ...(cate && {
-    //       cate_id: cate,
-    //     }),
-    //     ...(name && {
-    //       food_name: {
-    //         contains: name,
-    //         mode: 'insensitive',
-    //       },
-    //     }),
-    //   },
-    // };
-
-    // if (cursor) {
-    //   options.cursor = { id: cursor };
-    //   options.skip = 1;
-    // } else {
-    //   options.skip = skip;
-    // }
-
     const data = await this.prisma.$queryRaw<DataResponse[]>`
         SELECT 
             f.id AS id,
@@ -210,6 +194,14 @@ export class FoodService {
   }
 
   async update(id: number, data: UpdateFoodDto) {
+    const foundFood = await this.prisma.foods.findFirst({ where: { id } });
+    if (!foundFood || foundFood.status === 0) {
+      throw new RpcException({
+        message: 'not found food',
+        statusCode: HttpStatus.BAD_REQUEST,
+      });
+    }
+    await this.cacheManager.reset();
     return this.prisma.foods.update({
       where: { id },
       data,
@@ -301,7 +293,6 @@ export class FoodService {
     foundFoods.forEach((food) => {
       foodMap[food.id] = food;
     });
-    console.log('check', foodMap);
     return foodMap;
   }
 }

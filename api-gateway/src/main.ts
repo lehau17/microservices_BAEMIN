@@ -6,6 +6,8 @@ import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { Logger } from '@nestjs/common';
 import { WinstonModule } from 'nest-winston';
 import * as winston from 'winston';
+import * as compression from 'compression';
+import helmet from 'helmet';
 async function bootstrap() {
   // const logger = WinstonModule.createLogger({
   //   defaultMeta: { service: 'API Gateway' },
@@ -29,7 +31,8 @@ async function bootstrap() {
 
   app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalInterceptors(new TransformInterceptor(new Reflector()));
-
+  app.use(helmet());
+  app.use(compression());
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

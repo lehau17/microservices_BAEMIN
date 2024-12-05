@@ -1,12 +1,22 @@
-import { HttpStatus, Injectable, BadRequestException } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import {
+  HttpStatus,
+  Injectable,
+  BadRequestException,
+  Inject,
+} from '@nestjs/common';
+import { categories, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { RpcException } from '@nestjs/microservices';
-
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 @Injectable()
 export class CategoriesService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+  ) {}
 
   async create(data: Prisma.categoriesCreateInput) {
     return this.prisma.categories.create({ data });
@@ -21,6 +31,22 @@ export class CategoriesService {
     skip?: number;
     cursor?: number;
   }) {
+    const result: categories[] = await this.cacheManager.get(
+      `cates:cursor:${cursor ? cursor : 0}:page:${cursor ? 0 : skip / limit + 1}`,
+    );
+    if (result) {
+      return {
+        data: result,
+        filter: {
+          limit,
+          skip,
+        },
+        cursor: {
+          prevCursor: cursor,
+          nextCursor: result.length > limit ? result[length - 1].id : null,
+        },
+      };
+    }
     const options: Prisma.categoriesFindManyArgs = {
       take: limit,
       include: {
@@ -38,6 +64,12 @@ export class CategoriesService {
     }
 
     const data = await this.prisma.categories.findMany(options);
+    if (data && data.length > 0) {
+      await this.cacheManager.set(
+        `cates:cursor:${cursor ? cursor : 0}:page:${cursor ? 0 : skip / limit + 1}`,
+        data,
+      );
+    }
     return {
       data: data,
       filter: {
@@ -66,9 +98,11 @@ export class CategoriesService {
     if (!foundCate || foundCate.status === 0) {
       throw new RpcException({
         message: 'not found category',
-        statusCode: HttpStatus.BAD_GATEWAY,
+        statusCode: HttpStatus.BAD_REQUEST,
       });
     }
+    await this.cacheManager.reset();
+
     return this.prisma.categories.update({
       where: { id: data.id },
       data,
@@ -87,6 +121,7 @@ export class CategoriesService {
         statusCode: HttpStatus.BAD_REQUEST,
       });
     }
+    await this.cacheManager.reset();
     return this.prisma.categories.update({
       where: { id },
       data: {

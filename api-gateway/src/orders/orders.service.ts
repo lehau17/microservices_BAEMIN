@@ -6,6 +6,7 @@ import { lastValueFrom } from 'rxjs';
 import { ClientProxy } from '@nestjs/microservices';
 import { handleRetryWithBackoff } from 'src/common/utils/handlerTimeoutWithBackoff';
 import { ChangeStateOrderDto } from './dto/change-state-order.dto';
+import { PagingDto } from 'src/common/dto/paging.dto';
 
 @Injectable()
 export class OrdersService {
@@ -14,6 +15,14 @@ export class OrdersService {
     return lastValueFrom(
       this.orderService
         .send('createOrder', { ...createOrderDto, user_id, email })
+        .pipe(handleRetryWithBackoff(3, 1000)),
+    );
+  }
+
+  findOrderByShop(ownerId: number, paging: PagingDto) {
+    return lastValueFrom(
+      this.orderService
+        .send('findOrderByShop', { ownerId, ...paging })
         .pipe(handleRetryWithBackoff(3, 1000)),
     );
   }

@@ -3,7 +3,6 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { PassportModule } from '@nestjs/passport';
-import { LocalStrategy } from 'src/common/stategy/local.stategy';
 import { AccessTokenStrategy } from 'src/common/stategy/accessToken.stategy';
 import { RefreshTokenStrategy } from 'src/common/stategy/refreshToken.stategy';
 import { JwtModule } from '@nestjs/jwt';
@@ -17,7 +16,7 @@ import { ConfigService } from '@nestjs/config';
         transport: Transport.RMQ,
         options: {
           urls: [
-            `amqp://${process.env.RABBITMQ_USER || 'admin'}:${process.env.RABBITMQ_PASSWORD || '1234'}@${process.env.RABBITMQ_HOST || 'some-rabbit'}:5672`,
+            `amqp://${process.env.RABBITMQ_USER || 'admin'}:${process.env.RABBITMQ_PASSWORD || '1234'}@${process.env.RABBITMQ_HOST || 'localhost'}:5672`,
           ],
           queue: 'user_queue',
           queueOptions: {

@@ -1,9 +1,4 @@
-import {
-  Injectable,
-  BadRequestException,
-  Inject,
-  HttpStatus,
-} from '@nestjs/common';
+import { Injectable, Inject, HttpStatus } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Prisma } from '@prisma/client';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -11,6 +6,7 @@ import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { catchError, lastValueFrom, throwError } from 'rxjs';
 import { CartDto } from './dto/cart.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
+import { FindOrderByRestaurantDto } from './dto/find-order-by-restaurant.dto';
 
 @Injectable()
 export class OrdersService {
@@ -19,7 +15,61 @@ export class OrdersService {
     @Inject('USER_SERVICE') private userService: ClientProxy,
     @Inject('PRODUCT_SERVICE') private productService: ClientProxy,
     @Inject('MAIL_SERVICE') private mailService: ClientProxy,
+    @Inject('RESTAURANT_SERVICE') private resService: ClientProxy,
   ) {}
+
+  async findOrderByRes({
+    ownerId,
+    cursor,
+    limit = 20,
+    skip,
+  }: FindOrderByRestaurantDto) {
+    // check res
+    const foundRes = await lastValueFrom(
+      this.resService.send('findOneRestaurant', ownerId).pipe(
+        catchError((err) => {
+          console.log(err);
+          if (err instanceof RpcException) {
+            throw err;
+          } else {
+            throw new RpcException({
+              message: 'Error in res-service : findOneRestaurant',
+              statusCode: HttpStatus.BAD_REQUEST,
+            });
+          }
+        }),
+      ),
+    );
+
+    if (!foundRes || foundRes.status === 0) {
+      throw new RpcException({ message: 'Res not found', statusCode: 400 });
+    }
+    const options: Prisma.ordersFindManyArgs = {
+      take: limit,
+      cursor: cursor ? { id: cursor } : undefined,
+      skip: cursor ? skip : 0,
+      where: {
+        status: 1,
+        res_id: ownerId,
+      },
+      include: {
+        order_details: true,
+      },
+    };
+    const data = await this.prisma.orders.findMany(options);
+
+    return {
+      data,
+      filter: {
+        limit,
+        skip,
+      },
+      cursor: {
+        prevCursor: cursor,
+        nextCursor: data.length >= limit ? data[length - 1].id : null,
+      },
+    };
+  }
 
   async create(data: CreateOrderDto) {
     // Fetch cart items from user service

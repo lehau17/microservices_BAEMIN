@@ -16,7 +16,7 @@ import { CartsService } from 'src/carts/carts.service';
         transport: Transport.RMQ,
         options: {
           urls: [
-            `amqp://${process.env.RABBITMQ_USER || 'admin'}:${process.env.RABBITMQ_PASSWORD || '1234'}@${process.env.RABBITMQ_HOST || 'some-rabbit'}:5672`,
+            `amqp://${process.env.RABBITMQ_USER || 'admin'}:${process.env.RABBITMQ_PASSWORD || '1234'}@${process.env.RABBITMQ_HOST || 'localhost'}:5672`,
           ],
           queue: 'product_queue',
           queueOptions: {
@@ -30,7 +30,7 @@ import { CartsService } from 'src/carts/carts.service';
         transport: Transport.RMQ,
         options: {
           urls: [
-            `amqp://${process.env.RABBITMQ_USER || 'admin'}:${process.env.RABBITMQ_PASSWORD || '1234'}@${process.env.RABBITMQ_HOST || 'some-rabbit'}:5672`,
+            `amqp://${process.env.RABBITMQ_USER || 'admin'}:${process.env.RABBITMQ_PASSWORD || '1234'}@${process.env.RABBITMQ_HOST || 'localhost'}:5672`,
           ],
           queue: 'mail_queue',
           queueOptions: {
