@@ -18,10 +18,18 @@ import { VouchersModule } from './vouchers/vouchers.module';
 import { AddressesModule } from './addresses/addresses.module';
 import { OrdersModule } from './orders/orders.module';
 import { VoucherUsageModule } from './voucher-usage/voucher-usage.module';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 
 @Global()
 @Module({
   imports: [
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000,
+        limit: 60,
+      },
+    ]),
     ClientsModule.register([
       {
         name: 'USER_SERVICE',
@@ -127,6 +135,12 @@ import { VoucherUsageModule } from './voucher-usage/voucher-usage.module';
     VoucherUsageModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
 })
 export class AppModule {}
