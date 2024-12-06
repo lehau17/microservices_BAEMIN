@@ -4,10 +4,12 @@ import { AppService } from './app.service';
 import { VoucherModule } from './voucher/voucher.module';
 import { VoucherUsageModule } from './voucher-usage/voucher-usage.module';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { PrismaService } from './prisma/prisma.service';
+import { PrismaModule } from './prisma/prima.module';
 @Global()
 @Module({
-  imports: [VoucherModule, VoucherUsageModule],
+  imports: [VoucherModule, VoucherUsageModule, PrismaModule],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, PrismaService],
 })
 export class AppModule {}

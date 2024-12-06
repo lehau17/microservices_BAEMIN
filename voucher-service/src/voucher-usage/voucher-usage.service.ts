@@ -6,10 +6,7 @@ import { ClientProxy } from '@nestjs/microservices';
 
 @Injectable()
 export class VoucherUsageService {
-  constructor(
-    private prisma: PrismaService,
-    @Inject('USER_SERIVCE') private userService: ClientProxy,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
   // Tạo VoucherUsage mới
   // DI vào order check hết rồi không cần check

@@ -4,6 +4,7 @@ import {
   IsString,
   IsISO8601,
   isBoolean,
+  IsOptional,
 } from 'class-validator';
 import { DiscountType, VoucherType } from 'src/common/types/voucher.type';
 
@@ -24,8 +25,8 @@ export class CreateVoucherDto {
   @IsNotEmpty()
   vchr_voucher_type: VoucherType;
   vchr_is_active?: boolean;
-  @IsNumber()
+  @IsOptional()
   vchr_min_purchase_amount?: number;
-  @IsNumber()
+  @IsOptional()
   vchr_max_discount?: number;
 }

@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { VoucherService } from './voucher.service';
 import { VoucherController } from './voucher.controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { RestaurantService } from 'src/restaurant/restaurant.service';
 
 @Module({
   imports: [
@@ -23,6 +25,6 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
     ]),
   ],
   controllers: [VoucherController],
-  providers: [VoucherService],
+  providers: [VoucherService, PrismaService, RestaurantService],
 })
 export class VoucherModule {}

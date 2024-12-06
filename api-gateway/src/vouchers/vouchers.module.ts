@@ -7,13 +7,13 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
   imports: [
     ClientsModule.register([
       {
-        name: 'USER_SERVICE',
+        name: 'RESTAURANT_SERVICE',
         transport: Transport.RMQ,
         options: {
           urls: [
             `amqp://${process.env.RABBITMQ_USER || 'admin'}:${process.env.RABBITMQ_PASSWORD || '1234'}@${process.env.RABBITMQ_HOST || 'localhost'}:5672`,
           ],
-          queue: 'user_queue',
+          queue: 'restaurant_queue',
           queueOptions: {
             durable: true,
           },

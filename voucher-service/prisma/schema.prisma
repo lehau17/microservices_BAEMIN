@@ -7,22 +7,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum discountType {
-  percent
-  cash
-}
 
-enum voucherType{
-  shop
-  system
-}
 model vouchers {
   id                   Int         @id @default(autoincrement())
   vchr_code            String      @unique
-  vchr_discount_type   discountType      // Loại giảm giá (% hoặc tiền mặt)
-  vchr_discount_value  Float       // Giá trị giảm giá
-  vchr_expiration_date DateTime    // Ngày hết hạn
-  vchr_voucher_type    voucherType      // System hoặc Shop
+  vchr_discount_type   String      
+  vchr_discount_value  Float       
+  vchr_expiration_date DateTime    
+  vchr_voucher_type    String     
   vchr_is_active       Boolean     @default(true)
   vchr_min_purchase_amount Float?  @default(0)// Số tiền tối thiểu để áp dụng 
   vchr_max_discount    Float?      // Giảm giá tối đa

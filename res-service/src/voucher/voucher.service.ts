@@ -25,10 +25,12 @@ export class VoucherService {
       });
     }
     const newVoucher = await lastValueFrom(
-      this.voucherService.send('createVoucher', {
-        ...payload,
-        vchr_discount_type: VoucherType.SHOP,
-      }),
+      this.voucherService
+        .send('createVoucher', {
+          ...payload,
+          vchr_discount_type: VoucherType.SHOP,
+        })
+        .pipe(handleRetryWithBackoff(3, 1000)),
     );
     if (!newVoucher) {
       throw new RpcException({

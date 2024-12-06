@@ -14,7 +14,6 @@ import { VouchersService } from './vouchers.service';
 import { CreateVoucherDto } from './dto/create-voucher.dto';
 import { UpdateVoucherDto } from './dto/update-voucher.dto';
 import { AccessTokenGuard } from 'src/common/guards/accessToken.guard';
-import { PagingDto } from 'src/common/dto/paging.dto';
 import { FindVoucherDto } from './dto/find-vopucher.dto';
 import { Roles } from 'src/common/demos/roles.decorator';
 import ROLE from 'src/common/enums/role.enum';
@@ -26,7 +25,7 @@ export class VouchersController {
   constructor(private readonly vouchersService: VouchersService) {}
 
   @Post()
-  @Roles([ROLE.SHOP])
+  @Roles([ROLE.SHOP, ROLE.ADMIN])
   @UseGuards(AccessTokenGuard, RolesGuard)
   create(
     @Body() createVoucherDto: CreateVoucherDto,

@@ -39,7 +39,10 @@ export class HttpExceptionFilter implements ExceptionFilter {
         timestamp: new Date().toISOString(),
         path: request.url,
         message:
-          exception.message || exception || 'An unexpected error occurred',
+          exception.error ||
+          exception.message ||
+          exception ||
+          'An unexpected error occurred',
         // log: exception.log || 'No additional logs',
       });
     }

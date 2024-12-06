@@ -25,7 +25,7 @@ async function bootstrap() {
     new ValidationPipe({
       transform: true, // Chuyển đổi dữ liệu vào DTO
       whitelist: true, // Loại bỏ các thuộc tính không được định nghĩa trong DTO
-      forbidNonWhitelisted: true, // Báo lỗi nếu có thuộc tính không hợp lệ
+      forbidNonWhitelisted: false, // Báo lỗi nếu có thuộc tính không hợp lệ
     }),
   );
 

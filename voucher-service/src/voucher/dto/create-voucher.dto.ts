@@ -1,7 +1,7 @@
 import { DiscountType, VoucherType } from 'src/common/types/voucher.type';
 
 export class CreateVoucherDto {
-  shop_id?: number;
+  shop_id: number;
   vchr_code: string;
   vchr_discount_type: DiscountType;
   vchr_discount_value: number;

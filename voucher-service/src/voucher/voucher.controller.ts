@@ -7,7 +7,6 @@ import {
   Put,
   Delete,
 } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
 import { VoucherService } from './voucher.service';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { CreateVoucherDto } from './dto/create-voucher.dto';

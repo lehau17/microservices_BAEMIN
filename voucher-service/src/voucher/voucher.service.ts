@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { Prisma, vouchers } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateVoucherDto } from './dto/create-voucher.dto';
+import { RpcException } from '@nestjs/microservices';
 
 @Injectable()
 export class VoucherService {
@@ -9,6 +10,17 @@ export class VoucherService {
 
   // Tạo voucher mới
   async create(data: CreateVoucherDto): Promise<vouchers> {
+    const foundVoucher = await this.prisma.vouchers.findFirst({
+      where: {
+        vchr_code: data.vchr_code,
+      },
+    });
+    if (foundVoucher) {
+      throw new RpcException({
+        message: 'Voucher đã tồn tại',
+        statusCode: HttpStatus.BAD_REQUEST,
+      });
+    }
     return this.prisma.vouchers.create({
       data,
     });

@@ -17,6 +17,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { VouchersModule } from './vouchers/vouchers.module';
 import { AddressesModule } from './addresses/addresses.module';
 import { OrdersModule } from './orders/orders.module';
+import { VoucherUsageModule } from './voucher-usage/voucher-usage.module';
 
 @Global()
 @Module({
@@ -123,6 +124,7 @@ import { OrdersModule } from './orders/orders.module';
     VouchersModule,
     AddressesModule,
     OrdersModule,
+    VoucherUsageModule,
   ],
   controllers: [AppController],
   providers: [AppService],
