@@ -1,0 +1,1650 @@
+{
+	"info": {
+		"_postman_id": "4e7e744e-b082-4c1d-99ca-09bb22942ef7",
+		"name": "micro_service_baemin",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28678641"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"usr_username\" : \"hau17131203@gmail.com\",\r\n    \"usr_password\" : \"123456\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"usr_username\" : \"lehau18\",\r\n    \"usr_password\" : \"123456\",\r\n    \"usr_email\" : \"haudz20003@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/auth/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "refresh token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-refresh-token",
+								"value": "ello mother fucker bitch",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/auth/refresh-token",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"auth",
+								"refresh-token"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "restaurant",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjQsInVzZXJuYW1lIjoiaGF1MTcxMzEyMDNAZ21haWwuY29tIiwicm9sZSI6eyJpZCI6MSwicm9sZV9uYW1lIjoiVVNFUiJ9LCJpYXQiOjE3MzIzNDUzNDMsImV4cCI6MTczMzY0MTM0M30.S4-CoOCpCiW_FYyCkIFV2XAqeNcjMxP4jkEsL4XRHEI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"res_name\":\"Nhà hàng ngôi sao\",\r\n    \"res_time_start\" : \"2024-11-22T09:21:50.677Z\",\r\n    \"res_time_end\" : \"2024-11-22T09:21:50.677Z\",\r\n    \"res_address\" : {\r\n        \"city\" : \"Thành Phố Hồ Chí Minh\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/restaurants",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"restaurants"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjQsInVzZXJuYW1lIjoiaGF1MTcxMzEyMDNAZ21haWwuY29tIiwicm9sZSI6eyJpZCI6MSwicm9sZV9uYW1lIjoiVVNFUiJ9LCJpYXQiOjE3MzIzNDUzNDMsImV4cCI6MTczMzY0MTM0M30.S4-CoOCpCiW_FYyCkIFV2XAqeNcjMxP4jkEsL4XRHEI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"res_name\":\"hhhhhhh\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/restaurants",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"restaurants"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get my res",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjQsInVzZXJuYW1lIjoiaGF1MTcxMzEyMDNAZ21haWwuY29tIiwicm9sZSI6eyJpZCI6MSwicm9sZV9uYW1lIjoiVVNFUiJ9LCJpYXQiOjE3MzIzNDUzNDMsImV4cCI6MTczMzY0MTM0M30.S4-CoOCpCiW_FYyCkIFV2XAqeNcjMxP4jkEsL4XRHEI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/restaurants/res/me",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"restaurants",
+								"res",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get res by id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjQsInVzZXJuYW1lIjoiaGF1MTcxMzEyMDNAZ21haWwuY29tIiwicm9sZSI6eyJpZCI6MSwicm9sZV9uYW1lIjoiVVNFUiJ9LCJpYXQiOjE3MzIzNDUzNDMsImV4cCI6MTczMzY0MTM0M30.S4-CoOCpCiW_FYyCkIFV2XAqeNcjMxP4jkEsL4XRHEI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/restaurants/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"restaurants",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "remove",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "restaurant_rating",
+			"item": [
+				{
+					"name": "create res rating",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjQsInVzZXJuYW1lIjoiaGF1MTcxMzEyMDNAZ21haWwuY29tIiwicm9sZSI6eyJpZCI6MSwicm9sZV9uYW1lIjoiVVNFUiJ9LCJpYXQiOjE3MzIzNDUzNDMsImV4cCI6MTczMzY0MTM0M30.S4-CoOCpCiW_FYyCkIFV2XAqeNcjMxP4jkEsL4XRHEI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/restaurant-ratings",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"restaurant-ratings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "find all by res",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/restaurant-ratings/res/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"restaurant-ratings",
+								"res",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjQsInVzZXJuYW1lIjoiaGF1MTcxMzEyMDNAZ21haWwuY29tIiwicm9sZSI6eyJpZCI6MSwicm9sZV9uYW1lIjoiVVNFUiJ9LCJpYXQiOjE3MzI0NDEyNTUsImV4cCI6MTczMzczNzI1NX0.Av72fNKpcFpK8oteb-c509ZB0vR1lqJIxTW83Vb30yQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"res_rate_point\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/restaurant-ratings/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"restaurant-ratings",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjQsInVzZXJuYW1lIjoiaGF1MTcxMzEyMDNAZ21haWwuY29tIiwicm9sZSI6eyJpZCI6MSwicm9sZV9uYW1lIjoiVVNFUiJ9LCJpYXQiOjE3MzI0NDEyNTUsImV4cCI6MTczMzczNzI1NX0.Av72fNKpcFpK8oteb-c509ZB0vR1lqJIxTW83Vb30yQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/restaurant-ratings/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"restaurant-ratings",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list rating of me",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjQsInVzZXJuYW1lIjoiaGF1MTcxMzEyMDNAZ21haWwuY29tIiwicm9sZSI6eyJpZCI6MSwicm9sZV9uYW1lIjoiVVNFUiJ9LCJpYXQiOjE3MzI0NDEyNTUsImV4cCI6MTczMzczNzI1NX0.Av72fNKpcFpK8oteb-c509ZB0vR1lqJIxTW83Vb30yQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/restaurant-ratings/user/4/ratings",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"restaurant-ratings",
+								"user",
+								"4",
+								"ratings"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "categories",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjQsInVzZXJuYW1lIjoiaGF1MTcxMzEyMDNAZ21haWwuY29tIiwicm9sZSI6eyJpZCI6Miwicm9sZV9uYW1lIjoiQURNSU4ifSwiaWF0IjoxNzMyNDQ0NjY3LCJleHAiOjE3MzM3NDA2Njd9.2aZLoOMRuL5D53ZlkcufzgArL9d09UAionRyUaAbKhM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"cate_name\" : \"Túi Xách Xì Tin\",\r\n    \"cate_icon\" : \"https://picsum.photo/200\",\r\n    \"cate_description\" : \"Túi xách sext\",\r\n    \"status\" : 0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/categories",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/categories",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update cate",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjQsInVzZXJuYW1lIjoiaGF1MTcxMzEyMDNAZ21haWwuY29tIiwicm9sZSI6eyJpZCI6Miwicm9sZV9uYW1lIjoiQURNSU4ifSwiaWF0IjoxNzMyNDQ0NjY3LCJleHAiOjE3MzM3NDA2Njd9.2aZLoOMRuL5D53ZlkcufzgArL9d09UAionRyUaAbKhM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/categories/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"categories",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/categories/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"categories",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "foods",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjQsInVzZXJuYW1lIjoiaGF1MTcxMzEyMDNAZ21haWwuY29tIiwicm9sZSI6eyJpZCI6Miwicm9sZV9uYW1lIjoiQURNSU4ifSwiaWF0IjoxNzMyNDQ0NjY3LCJleHAiOjE3MzM3NDA2Njd9.2aZLoOMRuL5D53ZlkcufzgArL9d09UAionRyUaAbKhM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"cate_id\" : 1,\r\n    \"food_name\" : \"Gà rán mún ớt\",\r\n    \"food_description\" : \"Gà rán ngon nhất cái đất gò vấp này\",\r\n    \"food_images\" : \"https://picsum.photos/id/237/200/300\",\r\n    \"food_price\" : 2000,\r\n    \"food_stock\" :50\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/foods",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"foods"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "search",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/foods/search",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"foods",
+								"search"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "g",
+									"disabled": true
+								},
+								{
+									"key": "c_time",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "from_price",
+									"value": "3000",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/foods/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"foods",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjQsInVzZXJuYW1lIjoiaGF1MTcxMzEyMDNAZ21haWwuY29tIiwicm9sZSI6eyJpZCI6Miwicm9sZV9uYW1lIjoiQURNSU4ifSwiaWF0IjoxNzMyNDQ0NjY3LCJleHAiOjE3MzM3NDA2Njd9.2aZLoOMRuL5D53ZlkcufzgArL9d09UAionRyUaAbKhM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"food_name\"  : \"Bán nước mía cybersoft\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/foods/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"foods",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "food likes",
+			"item": [
+				{
+					"name": "toogle",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjQsInVzZXJuYW1lIjoiaGF1MTcxMzEyMDNAZ21haWwuY29tIiwicm9sZSI6eyJpZCI6Miwicm9sZV9uYW1lIjoiQURNSU4ifSwiaWF0IjoxNzMyNDQ0NjY3LCJleHAiOjE3MzM3NDA2Njd9.2aZLoOMRuL5D53ZlkcufzgArL9d09UAionRyUaAbKhM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/food-likes/toogle/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"food-likes",
+								"toogle",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjQsInVzZXJuYW1lIjoiaGF1MTcxMzEyMDNAZ21haWwuY29tIiwicm9sZSI6eyJpZCI6Miwicm9sZV9uYW1lIjoiQURNSU4ifSwiaWF0IjoxNzMyNDQ0NjY3LCJleHAiOjE3MzM3NDA2Njd9.2aZLoOMRuL5D53ZlkcufzgArL9d09UAionRyUaAbKhM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"food_id\" : 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/food-likes/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"food-likes",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "remove",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjQsInVzZXJuYW1lIjoiaGF1MTcxMzEyMDNAZ21haWwuY29tIiwicm9sZSI6eyJpZCI6Miwicm9sZV9uYW1lIjoiQURNSU4ifSwiaWF0IjoxNzMyNDQ0NjY3LCJleHAiOjE3MzM3NDA2Njd9.2aZLoOMRuL5D53ZlkcufzgArL9d09UAionRyUaAbKhM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/food-likes/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"food-likes",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "food ratings",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjQsInVzZXJuYW1lIjoiaGF1MTcxMzEyMDNAZ21haWwuY29tIiwicm9sZSI6eyJpZCI6Miwicm9sZV9uYW1lIjoiQURNSU4ifSwiaWF0IjoxNzMyNDQ0NjY3LCJleHAiOjE3MzM3NDA2Njd9.2aZLoOMRuL5D53ZlkcufzgArL9d09UAionRyUaAbKhM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"food_id\" : 2,\r\n    \"food_rate_point\" : 4,\r\n    \"food_rate_comment\" : \"day la comment cua food rating\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/food-ratings",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"food-ratings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjQsInVzZXJuYW1lIjoiaGF1MTcxMzEyMDNAZ21haWwuY29tIiwicm9sZSI6eyJpZCI6Miwicm9sZV9uYW1lIjoiQURNSU4ifSwiaWF0IjoxNzMyNDQ0NjY3LCJleHAiOjE3MzM3NDA2Njd9.2aZLoOMRuL5D53ZlkcufzgArL9d09UAionRyUaAbKhM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"food_rate_point\": 3\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/food-ratings/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"food-ratings",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjQsInVzZXJuYW1lIjoiaGF1MTcxMzEyMDNAZ21haWwuY29tIiwicm9sZSI6eyJpZCI6Miwicm9sZV9uYW1lIjoiQURNSU4ifSwiaWF0IjoxNzMyNDQ0NjY3LCJleHAiOjE3MzM3NDA2Njd9.2aZLoOMRuL5D53ZlkcufzgArL9d09UAionRyUaAbKhM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"food_rate_point\": 3\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/food-ratings/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"food-ratings",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "carts",
+			"item": [
+				{
+					"name": "add items",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjQsInVzZXJuYW1lIjoiaGF1MTcxMzEyMDNAZ21haWwuY29tIiwicm9sZSI6eyJpZCI6Miwicm9sZV9uYW1lIjoiQURNSU4ifSwiaWF0IjoxNzMyNDQ0NjY3LCJleHAiOjE3MzM3NDA2Njd9.2aZLoOMRuL5D53ZlkcufzgArL9d09UAionRyUaAbKhM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"food_id\"  : 9,\r\n    \"quantity\" : 10\r\n    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/carts/add-items",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"carts",
+								"add-items"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "my carts",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjQsInVzZXJuYW1lIjoiaGF1MTcxMzEyMDNAZ21haWwuY29tIiwicm9sZSI6eyJpZCI6Miwicm9sZV9uYW1lIjoiQURNSU4ifSwiaWF0IjoxNzMyNDQ0NjY3LCJleHAiOjE3MzM3NDA2Njd9.2aZLoOMRuL5D53ZlkcufzgArL9d09UAionRyUaAbKhM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/carts/me",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"carts",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjQsInVzZXJuYW1lIjoiaGF1MTcxMzEyMDNAZ21haWwuY29tIiwicm9sZSI6eyJpZCI6Miwicm9sZV9uYW1lIjoiQURNSU4ifSwiaWF0IjoxNzMyNDQ0NjY3LCJleHAiOjE3MzM3NDA2Njd9.2aZLoOMRuL5D53ZlkcufzgArL9d09UAionRyUaAbKhM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"quantity\" : 3,\r\n    \"food_id\" :1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/carts/18",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"carts",
+								"18"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjQsInVzZXJuYW1lIjoiaGF1MTcxMzEyMDNAZ21haWwuY29tIiwicm9sZSI6eyJpZCI6Miwicm9sZV9uYW1lIjoiQURNSU4ifSwiaWF0IjoxNzMyNDQ0NjY3LCJleHAiOjE3MzM3NDA2Njd9.2aZLoOMRuL5D53ZlkcufzgArL9d09UAionRyUaAbKhM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/carts/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"carts",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "upload",
+			"item": [
+				{
+					"name": "single file",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInVzZXJuYW1lIjoiaGF1QGdtYWlsLmNvbSIsImlhdCI6MTczMjYwMDUzNywiZXhwIjoxNzMzMDMyNTM3fQ.clG3g5Qx9W0PIX71BV-ilpCpTwXUdnN4Sh-gCseQheY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-upload-id",
+								"value": "haule",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/D:/ChungChi/Lê Trung Hậu JavaScript Basic Certificate.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/upload/upload",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"upload",
+								"upload"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "voucher",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjQsInVzZXJuYW1lIjoiaGF1MTcxMzEyMDNAZ21haWwuY29tIiwicm9sZSI6eyJpZCI6Miwicm9sZV9uYW1lIjoiQURNSU4ifSwiaWF0IjoxNzMzNDUzMjIzLCJleHAiOjE3MzQ3NDkyMjN9.5RgIxhbtaiH8yeXAHzdAuFmFMJENWXnL_x-hM44VZNo",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"vchr_code\": \"1234\",\r\n  \"vchr_discount_type\": \"cash\",\r\n  \"vchr_discount_value\": 20000,\r\n  \"vchr_expiration_date\": \"2024-12-06T02:53:50.670Z\",\r\n  \"vchr_voucher_type\": \"shop\",\r\n  \"vchr_min_purchase_amount\": 200000,\r\n  \"vchr_max_discount\": 100000000\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/vouchers",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"vouchers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInVzZXJuYW1lIjoiaGF1QGdtYWlsLmNvbSIsImlhdCI6MTczMjYwMDUzNywiZXhwIjoxNzMzMDMyNTM3fQ.clG3g5Qx9W0PIX71BV-ilpCpTwXUdnN4Sh-gCseQheY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/vouchers?limit=20&skip=0&c_time=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"vouchers"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "20"
+								},
+								{
+									"key": "skip",
+									"value": "0"
+								},
+								{
+									"key": "c_time",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInVzZXJuYW1lIjoiaGF1QGdtYWlsLmNvbSIsImlhdCI6MTczMjYwMDUzNywiZXhwIjoxNzMzMDMyNTM3fQ.clG3g5Qx9W0PIX71BV-ilpCpTwXUdnN4Sh-gCseQheY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"code\" : \"lehau12345\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/vouchers/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"vouchers",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "findOne",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInVzZXJuYW1lIjoiaGF1QGdtYWlsLmNvbSIsImlhdCI6MTczMjYwMDUzNywiZXhwIjoxNzMzMDMyNTM3fQ.clG3g5Qx9W0PIX71BV-ilpCpTwXUdnN4Sh-gCseQheY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/vouchers/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"vouchers",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "remove",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInVzZXJuYW1lIjoiaGF1QGdtYWlsLmNvbSIsImlhdCI6MTczMjYwMDUzNywiZXhwIjoxNzMzMDMyNTM3fQ.clG3g5Qx9W0PIX71BV-ilpCpTwXUdnN4Sh-gCseQheY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/vouchers/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"vouchers",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "address",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInVzZXJuYW1lIjoiaGF1QGdtYWlsLmNvbSIsImlhdCI6MTczMjYwMDUzNywiZXhwIjoxNzMzMDMyNTM3fQ.clG3g5Qx9W0PIX71BV-ilpCpTwXUdnN4Sh-gCseQheY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"adr_phone\" : \"097791160\",\r\n    \"adr_name\" : \"le trung hau\",\r\n    \"adr_address\" : \"123 khu 4\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/addresses",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"addresses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "remove",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInVzZXJuYW1lIjoiaGF1QGdtYWlsLmNvbSIsImlhdCI6MTczMjYwMDUzNywiZXhwIjoxNzMzMDMyNTM3fQ.clG3g5Qx9W0PIX71BV-ilpCpTwXUdnN4Sh-gCseQheY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/addresses/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"addresses",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "find one",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/addresses/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"addresses",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "order",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjQsInVzZXJuYW1lIjoiaGF1MTcxMzEyMDNAZ21haWwuY29tIiwicm9sZSI6eyJpZCI6Miwicm9sZV9uYW1lIjoiQURNSU4ifSwiaWF0IjoxNzMyNzMwNzI4LCJleHAiOjE3MzQwMjY3Mjh9.lnJ8xW9qs2FB0f3QYhWkKP3x64SvZvEQxBPC_0WsN-I",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"cart_items\" : [\r\n        {\r\n                \"food_id\"  : 9,\r\n                \"quantity\" : 10,\r\n                \"price\" :2000\r\n        }\r\n    ],\r\n    \"voucher_used\" : [],\r\n    \"address_shipping\": {\r\n        \"city\":\"haule\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/orders",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "find all by user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjQsInVzZXJuYW1lIjoiaGF1MTcxMzEyMDNAZ21haWwuY29tIiwicm9sZSI6eyJpZCI6Miwicm9sZV9uYW1lIjoiQURNSU4ifSwiaWF0IjoxNzMyNzMwNzI4LCJleHAiOjE3MzQwMjY3Mjh9.lnJ8xW9qs2FB0f3QYhWkKP3x64SvZvEQxBPC_0WsN-I",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/orders",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update state order when order status =1",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjQsInVzZXJuYW1lIjoiaGF1MTcxMzEyMDNAZ21haWwuY29tIiwicm9sZSI6eyJpZCI6Miwicm9sZV9uYW1lIjoiQURNSU4ifSwiaWF0IjoxNzMyNzMwNzI4LCJleHAiOjE3MzQwMjY3Mjh9.lnJ8xW9qs2FB0f3QYhWkKP3x64SvZvEQxBPC_0WsN-I",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"address_shipping\" : {\r\n        \"city\" : \"Bờ biển nga\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/orders/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"orders",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjQsInVzZXJuYW1lIjoiaGF1MTcxMzEyMDNAZ21haWwuY29tIiwicm9sZSI6eyJpZCI6Miwicm9sZV9uYW1lIjoiQURNSU4ifSwiaWF0IjoxNzMyNzMwNzI4LCJleHAiOjE3MzQwMjY3Mjh9.lnJ8xW9qs2FB0f3QYhWkKP3x64SvZvEQxBPC_0WsN-I",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"address_shipping\" : {\r\n        \"city\" : \"Bờ biển nga\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/orders/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"orders",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "change state order",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjQsInVzZXJuYW1lIjoiaGF1MTcxMzEyMDNAZ21haWwuY29tIiwicm9sZSI6eyJpZCI6Miwicm9sZV9uYW1lIjoiQURNSU4ifSwiaWF0IjoxNzMyNzMwNzI4LCJleHAiOjE3MzQwMjY3Mjh9.lnJ8xW9qs2FB0f3QYhWkKP3x64SvZvEQxBPC_0WsN-I",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"status\" : 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/orders/1/change-state",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"orders",
+								"1",
+								"change-state"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get my order",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjQsInVzZXJuYW1lIjoiaGF1MTcxMzEyMDNAZ21haWwuY29tIiwicm9sZSI6eyJpZCI6Miwicm9sZV9uYW1lIjoiQURNSU4ifSwiaWF0IjoxNzMzMTUyOTkzLCJleHAiOjE3MzQ0NDg5OTN9.qRR1K690NYVx98VcqEQ7_GvsLULNwd8KJ0-a1PTrmxI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/orders/find-order-of-me",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"orders",
+								"find-order-of-me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get order of res",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjQsInVzZXJuYW1lIjoiaGF1MTcxMzEyMDNAZ21haWwuY29tIiwicm9sZSI6eyJpZCI6Miwicm9sZV9uYW1lIjoiQURNSU4ifSwiaWF0IjoxNzMzMTUyOTkzLCJleHAiOjE3MzQ0NDg5OTN9.qRR1K690NYVx98VcqEQ7_GvsLULNwd8KJ0-a1PTrmxI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"owner_id\":1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/orders/find-order-by-res",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"orders",
+								"find-order-by-res"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
