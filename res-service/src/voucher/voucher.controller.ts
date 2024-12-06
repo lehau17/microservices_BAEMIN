@@ -3,6 +3,7 @@ import { MessagePattern, Payload } from '@nestjs/microservices';
 import { VoucherService } from './voucher.service';
 import { CreateVoucherDto } from './dto/create-voucher.dto';
 import { UpdateVoucherDto } from './dto/update-voucher.dto';
+import { RemoveVoucherDto } from './dto/remove-voucher.dto';
 
 @Controller()
 export class VoucherController {
@@ -25,11 +26,11 @@ export class VoucherController {
 
   @MessagePattern('updateVoucher')
   update(@Payload() updateVoucherDto: UpdateVoucherDto) {
-    return this.voucherService.update(updateVoucherDto.id, updateVoucherDto);
+    return this.voucherService.update(updateVoucherDto);
   }
 
   @MessagePattern('removeVoucher')
-  remove(@Payload() id: number) {
-    return this.voucherService.remove(id);
+  remove(@Payload() payload: RemoveVoucherDto) {
+    return this.voucherService.remove(payload);
   }
 }

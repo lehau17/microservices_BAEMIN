@@ -1,10 +1,12 @@
-import { handleRetryWithBackoff } from 'src/common/utils/handlerTimeoutWithBackoff';
 import { lastValueFrom } from 'rxjs';
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { CreateVoucherDto } from './dto/create-voucher.dto';
 import { UpdateVoucherDto } from './dto/update-voucher.dto';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { RestaurantService } from 'src/restaurant/restaurant.service';
+import { VoucherType } from 'src/common/types/voucher.type';
+import { FindVoucherByShopDto } from './dto/find-voucher-by-shop.dto';
+import { RemoveVoucherDto } from './dto/remove-voucher.dto';
 
 @Injectable()
 export class VoucherService {
@@ -22,7 +24,10 @@ export class VoucherService {
       });
     }
     const newVoucher = await lastValueFrom(
-      this.voucherService.send('createVoucher', payload).pipe(),
+      this.voucherService.send('createVoucher', {
+        ...payload,
+        vchr_discount_type: VoucherType.SHOP,
+      }),
     );
     if (!newVoucher) {
       throw new RpcException({
@@ -36,15 +41,38 @@ export class VoucherService {
     return `This action returns all voucher`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} voucher`;
+  async findVoucherByShop(paging: FindVoucherByShopDto) {
+    const foundShop = await this.resService.findOne(paging.shop_id);
+    if (!foundShop || foundShop.status === 0) {
+      throw new RpcException({
+        message: 'Shop not found',
+        status: HttpStatus.BAD_REQUEST,
+      });
+    }
+    return this.voucherService.send('findVoucherByShop', paging);
   }
 
-  update(id: number, updateVoucherDto: UpdateVoucherDto) {
-    return `This action updates a #${id} voucher`;
+  findOne(id: number) {}
+
+  async update({ shop_id, ...payload }: UpdateVoucherDto) {
+    const foundShop = await this.resService.findOne(shop_id);
+    if (!foundShop || foundShop.status === 0) {
+      throw new RpcException({
+        message: 'Shop not found',
+        status: HttpStatus.BAD_REQUEST,
+      });
+    }
+    return this.voucherService.send('updateVoucher', payload);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} voucher`;
+  async remove(payload: RemoveVoucherDto) {
+    const foundShop = await this.resService.findOne(payload.shop_id);
+    if (!foundShop || foundShop.status === 0) {
+      throw new RpcException({
+        message: 'Shop not found',
+        status: HttpStatus.BAD_REQUEST,
+      });
+    }
+    return this.voucherService.send('removeVoucher', payload.id);
   }
 }

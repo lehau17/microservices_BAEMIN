@@ -3,4 +3,5 @@ import { CreateVoucherDto } from './create-voucher.dto';
 
 export class UpdateVoucherDto extends PartialType(CreateVoucherDto) {
   id: number;
+  shop_id: number;
 }
