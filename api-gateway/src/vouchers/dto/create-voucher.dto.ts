@@ -29,4 +29,8 @@ export class CreateVoucherDto {
   vchr_min_purchase_amount?: number;
   @IsOptional()
   vchr_max_discount?: number;
+  @IsOptional()
+  vchr_max_quantity?: number;
+  @IsOptional()
+  vchr_use_quantity?: number;
 }

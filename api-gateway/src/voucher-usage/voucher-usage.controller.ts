@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { VoucherUsageService } from './voucher-usage.service';
 import { CreateVoucherUsageDto } from './dto/create-voucher-usage.dto';
 import { UpdateVoucherUsageDto } from './dto/update-voucher-usage.dto';
@@ -23,7 +31,10 @@ export class VoucherUsageController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateVoucherUsageDto: UpdateVoucherUsageDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateVoucherUsageDto: UpdateVoucherUsageDto,
+  ) {
     return this.voucherUsageService.update(+id, updateVoucherUsageDto);
   }
 

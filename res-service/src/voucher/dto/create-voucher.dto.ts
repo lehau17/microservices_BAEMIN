@@ -11,4 +11,6 @@ export class CreateVoucherDto {
   vchr_is_active?: boolean;
   vchr_min_purchase_amount?: number;
   vchr_max_discount?: number;
+  vchr_max_quantity?: number;
+  vchr_use_quantity?: number;
 }
