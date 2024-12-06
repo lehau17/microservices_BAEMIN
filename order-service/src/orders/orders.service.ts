@@ -16,6 +16,7 @@ export class OrdersService {
     @Inject('PRODUCT_SERVICE') private productService: ClientProxy,
     @Inject('MAIL_SERVICE') private mailService: ClientProxy,
     @Inject('RESTAURANT_SERVICE') private resService: ClientProxy,
+    @Inject('VOUCHER_SERVICE') private voucherService: ClientProxy,
   ) {}
 
   async findOrderByRes({
@@ -127,7 +128,6 @@ export class OrdersService {
           cartItem.quantity !== item.quantity ||
           cartItem.quantity > cartItem.food.foods_details.food_stock
         ) {
-          console.log(cartItem, item);
           throw new RpcException({
             message: `Có lỗi xảy ra khi tạo đơn hàng, vui lòng thử lại`,
             statusCode: HttpStatus.BAD_REQUEST,
