@@ -34,6 +34,7 @@ services:
       - node-network
     depends_on:
       - postgres
+      - redis # Thêm Redis là phụ thuộc
 
   res-service:
     container_name: res-service
@@ -52,6 +53,14 @@ services:
   user-service:
     container_name: user-service
     build: ./user-service
+    networks:
+      - node-network
+    depends_on:
+      - postgres
+
+  voucher-service:
+    container_name: voucher-service
+    build: ./voucher-service
     networks:
       - node-network
     depends_on:
@@ -82,6 +91,17 @@ services:
       - 15672:15672
     networks:
       - node-network
+
+  redis:
+    container_name: some-redis
+    image: redis:latest
+    environment:
+      REDIS_PASSWORD: 1234 # Mật khẩu cho Redis
+    ports:
+      - 6379:6379
+    networks:
+      - node-network
+    command: ["redis-server", "--requirepass", "1234"] # Cấu hình Redis yêu cầu mật khẩu
 
 networks:
   node-network:
