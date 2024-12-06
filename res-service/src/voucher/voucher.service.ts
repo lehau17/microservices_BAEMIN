@@ -1,4 +1,4 @@
-import { lastValueFrom } from 'rxjs';
+import { last, lastValueFrom } from 'rxjs';
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { CreateVoucherDto } from './dto/create-voucher.dto';
 import { UpdateVoucherDto } from './dto/update-voucher.dto';
@@ -7,6 +7,7 @@ import { RestaurantService } from 'src/restaurant/restaurant.service';
 import { VoucherType } from 'src/common/types/voucher.type';
 import { FindVoucherByShopDto } from './dto/find-voucher-by-shop.dto';
 import { RemoveVoucherDto } from './dto/remove-voucher.dto';
+import { handleRetryWithBackoff } from 'src/common/utils/handlerTimeoutWithBackoff';
 
 @Injectable()
 export class VoucherService {
@@ -37,6 +38,7 @@ export class VoucherService {
     }
     return newVoucher;
   }
+
   findAll() {
     return `This action returns all voucher`;
   }
@@ -49,10 +51,20 @@ export class VoucherService {
         status: HttpStatus.BAD_REQUEST,
       });
     }
-    return this.voucherService.send('findVoucherByShop', paging);
+    return lastValueFrom(
+      this.voucherService
+        .send('findVoucherByShop', paging)
+        .pipe(handleRetryWithBackoff(3, 1000)),
+    );
   }
 
-  findOne(id: number) {}
+  findOne(id: number) {
+    return lastValueFrom(
+      this.voucherService
+        .send('find-one-voucher', id)
+        .pipe(handleRetryWithBackoff(3, 1000)),
+    );
+  }
 
   async update({ shop_id, ...payload }: UpdateVoucherDto) {
     const foundShop = await this.resService.findOne(shop_id);
@@ -62,7 +74,9 @@ export class VoucherService {
         status: HttpStatus.BAD_REQUEST,
       });
     }
-    return this.voucherService.send('updateVoucher', payload);
+    return this.voucherService
+      .send('updateVoucher', payload)
+      .pipe(handleRetryWithBackoff(3, 1000));
   }
 
   async remove(payload: RemoveVoucherDto) {
@@ -73,6 +87,10 @@ export class VoucherService {
         status: HttpStatus.BAD_REQUEST,
       });
     }
-    return this.voucherService.send('removeVoucher', payload.id);
+    return lastValueFrom(
+      this.voucherService
+        .send('removeVoucher', payload.id)
+        .pipe(handleRetryWithBackoff(3, 1000)),
+    );
   }
 }

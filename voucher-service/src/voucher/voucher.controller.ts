@@ -11,13 +11,14 @@ import { Prisma } from '@prisma/client';
 import { VoucherService } from './voucher.service';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { CreateVoucherDto } from './dto/create-voucher.dto';
+import { UpdateVoucherDto } from './dto/update-voucher.dto';
 
 @Controller('vouchers')
 export class VoucherController {
   constructor(private readonly vouchersService: VoucherService) {}
 
   // Endpoint tạo voucher
-  @MessagePattern('create-voucher')
+  @MessagePattern('createVoucher')
   async create(@Payload() createVoucherDto: CreateVoucherDto) {
     return this.vouchersService.create(createVoucherDto);
   }
@@ -36,21 +37,11 @@ export class VoucherController {
 
   // Endpoint cập nhật voucher
   @MessagePattern('update-voucher')
-  async update(
-    @Payload()
-    {
-      id,
-      updateVoucherDto,
-    }: {
-      id: string;
-      updateVoucherDto: Prisma.vouchersUpdateInput;
-    },
-  ) {
+  async update(@Payload() { id, ...updateVoucherDto }: UpdateVoucherDto) {
     return this.vouchersService.update(Number(id), updateVoucherDto);
   }
 
-  // Endpoint xóa voucher
-  @MessagePattern('update-voucher')
+  @MessagePattern('removeVoucher')
   async remove(@Payload() id: string) {
     return this.vouchersService.remove(Number(id));
   }
