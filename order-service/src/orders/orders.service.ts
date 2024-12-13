@@ -299,11 +299,28 @@ export class OrdersService {
         statusCode: HttpStatus.BAD_REQUEST,
       });
     }
-    return this.prisma.orders.update({
+    const result = await this.prisma.orders.update({
       where: { id: order_id },
       data: {
         status: 0,
       },
     });
+    if (!result) {
+      throw new RpcException({
+        message: 'Có lỗi xảy ra, vui lòng thử lại',
+        statusCode: HttpStatus.BAD_REQUEST,
+      });
+    }
+    this.mailService.emit('sendMail', {
+      to: 'hau17131203@gmail.com',
+      subject: 'Confirm order cancellation',
+      template: './order-cancel',
+      context: {
+        orderId: result.id.toString(),
+        supportUrl: 'https://example.com/support',
+        year: new Date().getFullYear(),
+      },
+    });
+    return result;
   }
 }
