@@ -39,5 +39,7 @@ model restaurants {
   created_at         DateTime?            @default(now()) @db.Timestamp(6)
   updated_at         DateTime?            @default(now()) @db.Timestamp(6)
   res_description    String?
+  latitude Decimal? @default(0.000000)
+  longitude Decimal? @default(0.00000)
   restaurant_ratings restaurant_ratings[]
 }

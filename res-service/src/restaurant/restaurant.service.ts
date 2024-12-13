@@ -4,6 +4,8 @@ import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { Prisma } from '@prisma/client';
+import { UpdateAddressDto } from './dto/update-address.dto';
+import { Decimal } from '@prisma/client/runtime/library';
 
 @Injectable()
 export class RestaurantService {
@@ -43,12 +45,7 @@ export class RestaurantService {
     const foundRestaurant = await this.prismaService.restaurants.findFirst({
       where: { id },
     });
-    // if (!foundRestaurant || foundRestaurant.status == 0) {
-    //   throw new RpcException({
-    //     statusCode: HttpStatus.BAD_REQUEST,
-    //     message: 'Restaurant not found',
-    //   });
-    // }
+
     return foundRestaurant;
   }
 
@@ -65,6 +62,25 @@ export class RestaurantService {
       data: {
         ...data,
         updated_at: new Date(),
+      },
+    });
+  }
+
+  async updateAddress({ id, latitude, longitude }: UpdateAddressDto) {
+    const foundRes = await this.findOne(id);
+    if (!foundRes || foundRes.status == 0) {
+      throw new RpcException({
+        statusCode: 400,
+        message: 'Restaurant not found',
+      });
+    }
+    return this.prismaService.restaurants.update({
+      where: {
+        id,
+      },
+      data: {
+        latitude: new Decimal(latitude),
+        longitude: new Decimal(longitude),
       },
     });
   }

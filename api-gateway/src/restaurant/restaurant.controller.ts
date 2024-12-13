@@ -16,6 +16,7 @@ import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
 import { RolesGuard } from 'src/common/guards/roles.guard';
 import { Roles } from 'src/common/demos/roles.decorator';
 import { PagingDto } from 'src/common/dto/paging.dto';
+import { UpdateAddressDto } from './dto/update-address-restaurant.dto';
 
 @Controller('restaurants')
 export class RestaurantController {
@@ -41,6 +42,13 @@ export class RestaurantController {
   @UseGuards(AccessTokenGuard)
   update(@Body() payload: UpdateRestaurantDto, @Req() req) {
     return this.restaurantService.updateRestaurant(payload, req.user.sub);
+  }
+
+  @Patch()
+  @Roles(['USER', 'ADMIN'])
+  @UseGuards(AccessTokenGuard)
+  updateAddress(@Body() payload: UpdateAddressDto, @Req() req) {
+    return this.restaurantService.updateAddress(req.user.sub, payload);
   }
 
   @Get()

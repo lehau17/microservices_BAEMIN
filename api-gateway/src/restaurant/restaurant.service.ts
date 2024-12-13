@@ -6,6 +6,7 @@ import { UpdateAuthDto } from 'src/auth/dto/update-auth.dto';
 import { handleRetryWithBackoff } from 'src/common/utils/handlerTimeoutWithBackoff';
 import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
 import { PagingDto } from 'src/common/dto/paging.dto';
+import { UpdateAddressDto } from './dto/update-address-restaurant.dto';
 
 @Injectable()
 export class RestaurantService {
@@ -42,7 +43,12 @@ export class RestaurantService {
   }
 
   async removeRestaurant(id: number) {
-    console.log('check id', id);
     return lastValueFrom(this.resService.send('removeRestaurant', id));
+  }
+
+  async updateAddress(id: number, payload: UpdateAddressDto) {
+    return lastValueFrom(
+      this.resService.send('updateAddressRestaurant', { id, ...payload }),
+    );
   }
 }

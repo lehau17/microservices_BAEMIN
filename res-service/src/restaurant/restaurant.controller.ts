@@ -4,6 +4,7 @@ import { RestaurantService } from './restaurant.service';
 import { CreateRestaurantDto } from './dto/create-restaurant.dto';
 import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
 import { PagingDto } from 'src/common/dto/paging.dto';
+import { UpdateAddressDto } from './dto/update-address.dto';
 
 @Controller()
 export class RestaurantController {
@@ -30,6 +31,11 @@ export class RestaurantController {
   @MessagePattern('updateRestaurant')
   update(@Payload() { id, ...updateRestaurantDto }: UpdateRestaurantDto) {
     return this.restaurantService.update(id, updateRestaurantDto);
+  }
+
+  @MessagePattern('updateAddressRestaurant')
+  updateAddress(@Payload() payload: UpdateAddressDto) {
+    return this.restaurantService.updateAddress(payload);
   }
 
   @MessagePattern('removeRestaurant')
