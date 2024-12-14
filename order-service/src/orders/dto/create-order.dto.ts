@@ -9,3 +9,6 @@ export class CreateOrderDto {
   voucher_used?: Object[];
   address_shipping: object;
 }
+
+// shipping_method_id
+// address

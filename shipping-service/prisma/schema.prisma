@@ -12,8 +12,7 @@ model shippings {
   id               Int      @id @default(autoincrement())
   order_id         Int
   address          Json  
-  postal_code      String   @db.VarChar(10)
-  status           ShippingStatus
+  status           String
   shipping_method_id  Int   @default(0)
   shipping_date    DateTime @db.Timestamp(6)
   estimated_delivery DateTime @db.Timestamp(6)

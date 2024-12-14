@@ -269,6 +269,9 @@ export class OrdersService {
         statusCode: HttpStatus.FORBIDDEN,
       });
     }
+    if (status > 2) {
+      // send emit qua cho shipping service xử lý
+    }
     return this.prisma.orders.update({
       where: {
         id: order_id,
@@ -279,7 +282,6 @@ export class OrdersService {
     });
   }
 
-  // Delete an order by ID using by user
   async remove({ user_id, order_id }: { user_id: number; order_id: number }) {
     const foundOrder = await this.findOne(order_id);
     if (!foundOrder || foundOrder.status === 0)
