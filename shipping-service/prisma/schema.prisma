@@ -8,9 +8,33 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model order_tracking {
-  id Int @id @default(autoincrement())
-  order_id Int 
-  created_at DateTime @default(now()) @db.Timestamp(6)
-  state_order String
+model shippings {
+  id               Int      @id @default(autoincrement())
+  order_id         Int
+  address          Json  
+  postal_code      String   @db.VarChar(10)
+  status           ShippingStatus
+  shipping_method_id  Int   @default(0)
+  shipping_date    DateTime @db.Timestamp(6)
+  estimated_delivery DateTime @db.Timestamp(6)
+  tracking_number  String   @db.VarChar(50)
+  customer_id      Int
+  created_at       DateTime @default(now()) @db.Timestamp(6)
+  updated_at       DateTime @updatedAt @db.Timestamp(6)
+}
+
+
+model shipping_method {
+  id          Int      @id @default(autoincrement()) 
+  name        String   @db.VarChar(100)             
+  description String?  @db.Text                   
+  created_at  DateTime @default(now()) @db.Timestamp(6)
+}
+
+
+enum ShippingStatus {
+  Pending
+  Shipped
+  Delivered
+  Returned
 }
