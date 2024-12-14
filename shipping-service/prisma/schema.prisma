@@ -29,6 +29,7 @@ model shipping_method {
   name        String   @db.VarChar(100)             
   description String?  @db.Text                   
   created_at  DateTime @default(now()) @db.Timestamp(6)
+  status Int? @default(1)
 }
 
 
