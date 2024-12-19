@@ -5,8 +5,6 @@ import { PrismaModule } from './prisma/prima.module';
 import { UserModule } from './user/user.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { CartsModule } from './carts/carts.module';
-import { CartItemsModule } from './cart_items/cart_items.module';
 import { JwtModule } from '@nestjs/jwt';
 @Global()
 @Module({
@@ -58,8 +56,6 @@ import { JwtModule } from '@nestjs/jwt';
         },
       },
     ]),
-    CartsModule,
-    CartItemsModule,
     JwtModule,
   ],
   controllers: [AppController],

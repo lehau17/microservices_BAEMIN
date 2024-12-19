@@ -17,15 +17,13 @@ import { ConfigService } from '@nestjs/config';
 import { UserDTO } from 'src/common/dto/response.dto';
 import { TokenPayload } from 'src/common/dto/tokenPayload.jwt.dto';
 
-import { CartsService } from 'src/carts/carts.service';
-
 @Injectable()
 export class UserService {
   constructor(
     private prisma: PrismaService,
     private jwtService: JwtService,
     private configService: ConfigService,
-    private cartService: CartsService,
+    @Inject('CART_SERVICE') private cartService: ClientProxy,
     @Inject('MAIL_SERVICE') private mailService: ClientProxy,
   ) {}
   create(createUserDto: CreateUserDto) {
@@ -144,7 +142,7 @@ export class UserService {
       },
     });
     // create cart
-    await this.cartService.create(newUser.id);
+    this.cartService.emit('createCart', newUser.id).pipe();
     this.mailService.emit('sendMail', {
       to: newUser.usr_email,
       context: {

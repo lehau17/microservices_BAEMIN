@@ -5,7 +5,6 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { CartsService } from 'src/carts/carts.service';
 
 @Module({
   imports: [
@@ -27,12 +26,6 @@ import { CartsService } from 'src/carts/carts.service';
     ]),
   ],
   controllers: [UserController],
-  providers: [
-    UserService,
-    PrismaService,
-    JwtService,
-    ConfigService,
-    CartsService,
-  ],
+  providers: [UserService, PrismaService, JwtService, ConfigService],
 })
 export class UserModule {}
