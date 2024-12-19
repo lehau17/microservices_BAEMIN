@@ -1,5 +1,4 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { CreateCartDto } from './dto/create-cart.dto';
 import { UpdateCartDto } from './dto/update-cart.dto';
 import { AddCartItemDto } from './dto/add-items.dto';
 import { lastValueFrom } from 'rxjs';
@@ -8,10 +7,13 @@ import { handleRetryWithBackoff } from 'src/common/utils/handlerTimeoutWithBacko
 
 @Injectable()
 export class CartsService {
-  constructor(@Inject('USER_SERVICE') private userService: ClientProxy) {}
+  constructor(
+    @Inject('USER_SERVICE') private userService: ClientProxy,
+    @Inject('CART_SERVICE') private cartService: ClientProxy,
+  ) {}
   create(body: AddCartItemDto, user_id: number) {
     return lastValueFrom(
-      this.userService
+      this.cartService
         .send('createCartItem', { ...body, user_id })
         .pipe(handleRetryWithBackoff(3, 1000)),
     );
@@ -27,7 +29,7 @@ export class CartsService {
 
   update(id: number, updateCartDto: UpdateCartDto, user_id: number) {
     return lastValueFrom(
-      this.userService
+      this.cartService
         .send('updateCartItem', { id, ...updateCartDto, user_id })
         .pipe(handleRetryWithBackoff(3, 1000)),
     );
@@ -35,7 +37,7 @@ export class CartsService {
 
   remove(id: number, user_id: number) {
     return lastValueFrom(
-      this.userService
+      this.cartService
         .send('removeCartItem', { id, user_id })
         .pipe(handleRetryWithBackoff(3, 1000)),
     );
