@@ -3,8 +3,10 @@ import { UploadService } from './upload.service';
 import { UploadController } from './upload.controller';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 @Module({
   imports: [
+    ConfigModule,
     ServeStaticModule.forRoot({
       rootPath: '.',
     }),
@@ -26,6 +28,6 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
     ]),
   ],
   controllers: [UploadController],
-  providers: [UploadService],
+  providers: [UploadService, ConfigService],
 })
 export class UploadModule {}

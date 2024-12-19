@@ -14,4 +14,12 @@ export class UploadService {
         .pipe(handleRetryWithBackoff(3, 1000)),
     );
   }
+
+  uploadUsingS3(file: any) {
+    return lastValueFrom(
+      this.uploadService
+        .send('uploadFileS3', file)
+        .pipe(handleRetryWithBackoff(3, 1000)),
+    );
+  }
 }

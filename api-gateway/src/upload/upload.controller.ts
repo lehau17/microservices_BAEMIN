@@ -24,4 +24,16 @@ export class UploadController {
     // Gửi dữ liệu file tới microservice
     return this.uploadService.upload(fileData);
   }
+
+  @Post('uploadS3')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadFileUsingS3(@UploadedFile() file: Express.Multer.File) {
+    const fileData = {
+      ...file,
+      buffer: file.buffer.toString('base64'), // Encode buffer to base64
+    };
+
+    // Gửi dữ liệu file tới microservice
+    return this.uploadService.uploadUsingS3(fileData);
+  }
 }
