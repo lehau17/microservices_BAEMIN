@@ -1,0 +1,29 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model cart_items {
+  id         Int       @id @default(autoincrement())
+  cart_id    Int
+  food_id    Int
+  quantity   Int?      @default(1)
+  status     Int?
+  created_at DateTime? @default(now()) @db.Timestamp(6)
+  updated_at DateTime? @default(now()) @db.Timestamp(6)
+  price      Float?
+  carts      carts     @relation(fields: [cart_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model carts {
+  id         Int          @id @default(autoincrement())
+  user_id    Int?
+  status     Int?
+  created_at DateTime?    @default(now()) @db.Timestamp(6)
+  updated_at DateTime?    @default(now()) @db.Timestamp(6)
+  cart_items cart_items[]
+}
