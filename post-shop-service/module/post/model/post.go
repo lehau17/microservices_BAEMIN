@@ -1,6 +1,12 @@
 package postmodel
 
-import "time"
+import (
+	"post-shop-service/common"
+	"time"
+)
+
+
+
 
 type Post struct {
 	ID           int       `db:"id"`            // Mã định danh bài viết
@@ -14,9 +20,18 @@ type Post struct {
 	CreatedAt    time.Time `db:"created_at"`    // Thời điểm tạo bài viết
 	UpdatedAt    time.Time `db:"updated_at"`    // Thời điểm cập nhật bài viết
 	Hashtag      *string   `db:"hashtag"`       // Hashtag bài viết
-	Status       string    `db:"status"`        // Trạng thái bài viết
+	Status       common.Status    `db:"status"`        // Trạng thái bài viết
 }
 
+
+
+type CreatePost struct {
+	Title        string    `db:"title"`         
+	Content      string    `db:"content"`       
+	ShopID       int       `db:"shop_id"`
+	Hashtag	  *string   `db:"hashtag"`       
+	Status       common.Status    `db:"status"`
+}
 
 
 
