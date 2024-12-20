@@ -1,40 +1,71 @@
 package main
 
 import (
-	"post-shop-service/config"
+	"fmt"
+	"log"
 
-	"github.com/gin-gonic/gin"
-	"github.com/jmoiron/sqlx"
+	"github.com/streadway/amqp"
 )
 
-var db *sqlx.DB
+func failOnError(err error, msg string) {
+	if err != nil {
+		log.Fatalf("%s: %s", msg, err)
+	}
+}
 
 func main() {
-	config.NewLoadConfigENV()
-	config.NewSqlInstance()
-	gin.SetMode(gin.DebugMode)
-    r := gin.Default()
+	conn, err := amqp.Dial("amqp://admin:1234@localhost:5672/")
+	failOnError(err, "Failed to connect to RabbitMQ")
+	defer conn.Close()
 
-	
+	ch, err := conn.Channel()
+	failOnError(err, "Failed to open a channel")
+	defer ch.Close()
 
-    // Routes
-    r.GET("/users", getUsers)
+	q, err := ch.QueueDeclare(
+		"go_service_queue", // queue name
+		true,               // durable
+		false,              // delete when unused
+		false,              // exclusive
+		false,              // no-wait
+		nil,                // arguments
+	)
+	failOnError(err, "Failed to declare a queue")
 
-    // Start server
-    r.Run(":8080")
-}
+	msgs, err := ch.Consume(
+		q.Name, // queue
+		"",     // consumer
+		true,   // auto-ack
+		false,  // exclusive
+		false,  // no-local
+		false,  // no-wait
+		nil,    // args
+	)
+	failOnError(err, "Failed to register a consumer")
 
-type User struct {
-    ID   int    `db:"id" json:"id"`
-    Name string `db:"name" json:"name"`
-}
+	forever := make(chan bool)
 
-func getUsers(c *gin.Context) {
-    var users []User
-    err := db.Select(&users, "SELECT id, name FROM users")
-    if err != nil {
-        c.JSON(500, gin.H{"error": err.Error()})
-        return
-    }
-    c.JSON(200, users)
+	go func() {
+		for d := range msgs {
+			log.Printf("Received a message: %s", d.Body)
+			// Process the message here
+			fmt.Printf(string(d.Body))
+			// Send a response back to the reply-to queue
+
+			err = ch.Publish(
+				"",        // exchange
+				d.ReplyTo, // routing key (reply-to queue)
+				false,     // mandatory
+				false,     // immediate
+				amqp.Publishing{
+					ContentType:   "application/json",
+					CorrelationId: d.CorrelationId,
+					Body:          d.Body,
+				})
+			failOnError(err, "Failed to publish a message")
+		}
+	}()
+
+	log.Printf(" [*] Waiting for messages. To exit press CTRL+C")
+	<-forever
 }

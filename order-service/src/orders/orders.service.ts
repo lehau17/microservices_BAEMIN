@@ -29,7 +29,6 @@ export class OrdersService {
     const foundRes = await lastValueFrom(
       this.resService.send('findOneRestaurant', ownerId).pipe(
         catchError((err) => {
-          console.log(err);
           if (err instanceof RpcException) {
             throw err;
           } else {

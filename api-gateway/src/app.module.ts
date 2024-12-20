@@ -19,6 +19,7 @@ import { OrdersModule } from './orders/orders.module';
 import { VoucherUsageModule } from './voucher-usage/voucher-usage.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
+import { PostModule } from './post/posts.module';
 
 @Global()
 @Module({
@@ -42,6 +43,20 @@ import { APP_GUARD } from '@nestjs/core';
             durable: true,
           },
           persistent: true,
+        },
+      },
+      {
+        name: 'POST_SERVICE',
+        transport: Transport.RMQ,
+        options: {
+          urls: [
+            `amqp://${process.env.RABBITMQ_USER || 'admin'}:${process.env.RABBITMQ_PASSWORD || '1234'}@${process.env.RABBITMQ_HOST || 'localhost'}:5672`,
+          ],
+          queue: 'post_queue',
+          queueOptions: {
+            durable: true,
+          },
+          persistent: false,
         },
       },
       {
@@ -132,6 +147,7 @@ import { APP_GUARD } from '@nestjs/core';
     AddressesModule,
     OrdersModule,
     VoucherUsageModule,
+    PostModule,
   ],
   controllers: [AppController],
   providers: [
