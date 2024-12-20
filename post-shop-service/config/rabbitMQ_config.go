@@ -1,18 +1,20 @@
 package config
 
-import "github.com/streadway/amqp"
+import (
+	"github.com/streadway/amqp"
+)
 
 func ConnectRabbitMQ() (*amqp.Connection, *amqp.Channel, error) {
-	conn, err := amqp.Dial("amqp://admin:1234@localhost:5672")
+	conn, err := amqp.Dial("amqp://admin:1234@localhost:5672/")
 	if err != nil {
 		return nil, nil, err
 	}
+	defer conn.Close()
 
-	channel, err := conn.Channel()
+	ch, err := conn.Channel()
 	if err != nil {
-		conn.Close()
 		return nil, nil, err
 	}
-
-	return conn, channel, nil
+	defer ch.Close()
+	return conn, ch, nil
 }
