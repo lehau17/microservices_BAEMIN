@@ -2,11 +2,9 @@ import {
   Controller,
   Post,
   UploadedFile,
-  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { UploadService } from './upload.service';
-import { AccessTokenGuard } from 'src/common/guards/accessToken.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('upload')
@@ -21,7 +19,6 @@ export class UploadController {
       buffer: file.buffer.toString('base64'), // Encode buffer to base64
     };
 
-    // Gửi dữ liệu file tới microservice
     return this.uploadService.upload(fileData);
   }
 
@@ -33,7 +30,6 @@ export class UploadController {
       buffer: file.buffer.toString('base64'), // Encode buffer to base64
     };
 
-    // Gửi dữ liệu file tới microservice
     return this.uploadService.uploadUsingS3(fileData);
   }
 }

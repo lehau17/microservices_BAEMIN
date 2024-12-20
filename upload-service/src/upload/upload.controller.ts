@@ -4,11 +4,7 @@ import { MessagePattern, Payload, RpcException } from '@nestjs/microservices';
 import { UploadService } from './upload.service';
 import * as fs from 'fs';
 import slugify from 'slugify';
-import {
-  S3Client,
-  PutObjectCommand,
-  ObjectCannedACL,
-} from '@aws-sdk/client-s3';
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 
 @Controller()
 export class UploadController {
