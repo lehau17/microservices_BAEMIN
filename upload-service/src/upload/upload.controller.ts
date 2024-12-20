@@ -13,11 +13,13 @@ import {
 @Controller()
 export class UploadController {
   private s3: S3Client;
+  private url_cloudfront: string;
 
   constructor(
     private readonly uploadService: UploadService,
     private readonly configService: ConfigService,
   ) {
+    this.url_cloudfront = configService.get<string>('AWS_CLOUD_FRONT');
     this.s3 = new S3Client({
       region: 'ap-southeast-1',
       credentials: {
@@ -32,7 +34,7 @@ export class UploadController {
     const { originalname } = file;
 
     return await this.s3_upload(
-      file.buffer,
+      Buffer.from(file.buffer, 'base64'),
       this.configService.get<string>('AWS_S3_NAME'),
       originalname,
       file.mimetype,
@@ -56,19 +58,19 @@ export class UploadController {
   }
 
   async s3_upload(file, bucket, name, mimetype) {
+    const key = new Date().getTime() + slugify(name);
     const params = {
       Bucket: bucket,
-      Key: new Date().getTime + slugify(name),
+      Key: key,
       Body: file,
       ContentType: mimetype,
     };
 
     try {
       const command = new PutObjectCommand(params);
-      const response = await this.s3.send(command);
-      return response;
+      await this.s3.send(command);
+      return this.url_cloudfront + '/' + key;
     } catch (e) {
-      console.error(e);
       throw new RpcException(e);
     }
   }
