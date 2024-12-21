@@ -5,11 +5,12 @@ import (
 	postmodel "post-shop-service/module/post/model"
 )
 
-func(s *sqlStore) CreatePost(ctx context.Context, data *postmodel.CreatePost) (error) {
+func (s *sqlStore) CreatePost(ctx context.Context, data *postmodel.CreatePost) (int64, error) {
 	query := `
 		INSERT INTO post (title, content, shop_id,  hashtag, status)
 		VALUES (:title, :content, :shop_id, :hashtag, :status)
 	`
-	_, err := s.db.NamedExec(query, data)
-	return err
-} 
+	result, err := s.db.NamedExec(query, data)
+	id, _ := result.LastInsertId()
+	return id, err
+}

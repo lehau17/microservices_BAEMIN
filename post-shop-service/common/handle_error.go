@@ -12,3 +12,10 @@ func NewErrorResponse(code int, message string) RpcErrorResponse {
 		Message:    message,
 	}
 }
+
+func NewSqlErrorResponse(err error) RpcErrorResponse {
+	return RpcErrorResponse{
+		StatusCode: 500,
+		Message:    err.Error(),
+	}
+}

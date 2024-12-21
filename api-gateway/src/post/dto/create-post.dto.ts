@@ -1,4 +1,4 @@
-import { IsInt, IsNotEmpty, IsString } from 'class-validator';
+import { IsEnum, IsInt, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreatePostDto {
   @IsString()
@@ -13,7 +13,7 @@ export class CreatePostDto {
   @IsString()
   @IsNotEmpty()
   hashtag: string;
-  @IsString()
   @IsNotEmpty()
+  @IsEnum(['draft', 'published', 'archived', 'block', 'deleted'])
   status: string;
 }

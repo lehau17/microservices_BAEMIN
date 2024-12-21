@@ -1,6 +1,11 @@
 // post.service.ts (NestJS)
-import { Injectable } from '@nestjs/common';
-import { Client, ClientProxy, Transport } from '@nestjs/microservices';
+import { HttpException, Injectable } from '@nestjs/common';
+import {
+  Client,
+  ClientProxy,
+  RpcException,
+  Transport,
+} from '@nestjs/microservices';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { catchError, lastValueFrom, throwError } from 'rxjs';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -24,13 +29,12 @@ export class PostService {
   async create(createPostDto: CreatePostDto) {
     const response = await lastValueFrom(
       this.client.send('create_post_event', createPostDto).pipe(
-        catchError((error) => {
-          console.log('Error when send create_post_event', error);
-          return throwError(error);
-        }),
+        handleRetryWithBackoff(3, 1000), // Thử lại 3 lần với độ trễ 1s, 2s, 4s
       ),
     );
-
+    if (response.statusCode && response.statusCode >= 400) {
+      throw new HttpException(response.message, response.statusCode);
+    }
     return response;
   }
 

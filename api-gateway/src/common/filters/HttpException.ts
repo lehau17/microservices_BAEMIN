@@ -5,7 +5,6 @@ import {
   HttpException,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { ErrorGlobalDto } from '../dto/GlobalError.dto';
 
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {

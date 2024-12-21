@@ -6,23 +6,21 @@ import (
 )
 
 type PostCreateStorage interface {
-	CreatePost(ctx context.Context, data *postmodel.CreatePost) error
+	CreatePost(ctx context.Context, data *postmodel.CreatePost) (int64, error)
 }
-
 
 type FoodCreateBiz struct {
 	storage PostCreateStorage
 }
 
-
-func NewFoodCreateBiz(storage  PostCreateStorage) (*FoodCreateBiz) {
+func NewFoodCreateBiz(storage PostCreateStorage) *FoodCreateBiz {
 	return &FoodCreateBiz{storage: storage}
 }
 
-
-func (b *FoodCreateBiz) CreatePost(ctx context.Context, data *postmodel.CreatePost) error {
-	if err := b.storage.CreatePost(ctx, data); err != nil {
-		return err
+func (b *FoodCreateBiz) CreatePost(ctx context.Context, data *postmodel.CreatePost) (int64, error) {
+	id, err := b.storage.CreatePost(ctx, data)
+	if err != nil {
+		return 0, err
 	}
-	return nil
+	return id, nil
 }

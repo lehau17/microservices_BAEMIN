@@ -6,6 +6,7 @@ import (
 	"log"
 	"post-shop-service/common"
 	appcontext "post-shop-service/component/app_context"
+	"post-shop-service/component/publish"
 	postbiz "post-shop-service/module/post/biz"
 	postmodel "post-shop-service/module/post/model"
 	poststorage "post-shop-service/module/post/storage"
@@ -19,40 +20,30 @@ func CreatePost(appCtx appcontext.AppContext, data *common.CreatePost, d *amqp.D
 	storage := poststorage.NewSqlStore(appCtx.GetMainDBConnection())
 	biz := postbiz.NewFoodCreateBiz(storage)
 	var response []byte
-	if err := biz.CreatePost(context.Background(), &dataCreatePost); err != nil {
-		log.Printf("Failed to create post: %v", err)
-		errorResponse := map[string]interface{}{
-			"statusCode": 500,
-			"message":    err.Error(),
-		}
+	id, err := biz.CreatePost(context.Background(), &dataCreatePost)
+	if err != nil {
+		errorResponse := common.NewSqlErrorResponse(err)
 		response, _ := json.Marshal(errorResponse)
-		err := ch.Publish(
-			"",        // exchange
-			d.ReplyTo, // routing key (reply-to queue)
-			false,     // mandatory
-			false,     // immediate
-			amqp.Publishing{
-				ContentType:   "application/json",
-				CorrelationId: d.CorrelationId,
-				Body:          response,
-			},
-		)
+
+		publishPayload := publish.NewPublishPayload("", d.ReplyTo, false, false, amqp.Publishing{
+			ContentType:   "application/json",
+			CorrelationId: d.CorrelationId,
+			Body:          response,
+		})
+
+		err := publish.Publish(ch, publishPayload)
 		if err != nil {
 			log.Printf("Failed to publish a message: %v", err)
 		}
 	} else {
-		response, _ = json.Marshal("Create post success")
-		err := ch.Publish(
-			"",        // exchange
-			d.ReplyTo, // routing key (reply-to queue)
-			false,     // mandatory
-			false,     // immediate
-			amqp.Publishing{
-				ContentType:   "application/json",
-				CorrelationId: d.CorrelationId,
-				Body:          response,
-			},
-		)
+		response, _ = json.Marshal(map[string]interface{}{"id": id})
+		publishPayload := publish.NewPublishPayload("", d.ReplyTo, false, false, amqp.Publishing{
+			ContentType:   "application/json",
+			CorrelationId: d.CorrelationId,
+			Body:          response,
+		})
+		err := publish.Publish(ch, publishPayload)
+
 		if err != nil {
 			log.Printf("Failed to publish a message: %v", err)
 		}
