@@ -6,15 +6,15 @@ import (
 	postmodel "post-shop-service/module/post/model"
 )
 
-func (s *sqlStore) FindAll(ctx context.Context, paging *paging.Paging) ([]postmodel.Post, error) {
+func (s *sqlStore) FindAllByShop(ctx context.Context, paging *paging.Paging, shopID int) ([]postmodel.Post, error) {
 	var posts []postmodel.Post
-	query := `SELECT * FROM post`
-	args := []interface{}{}
+	query := `SELECT * FROM post WHERE shop_id = ?`
+	args := []interface{}{shopID}
 
 	// Apply cursor-based pagination if cursor is provided
 	if paging != nil {
 		if paging.Cursor != nil {
-			query += ` WHERE id < ?`
+			query += ` AND id < ?`
 			args = append(args, *paging.Cursor)
 		}
 		query += ` ORDER BY id DESC`
