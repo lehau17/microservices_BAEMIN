@@ -8,6 +8,10 @@ type RpcErrorResponse struct {
 	Message    string `json:"message"`
 }
 
+func (e RpcErrorResponse) Error() string {
+	return e.Message
+}
+
 func NewErrorResponse(code int, message string) RpcErrorResponse {
 	return RpcErrorResponse{
 		StatusCode: (code),
