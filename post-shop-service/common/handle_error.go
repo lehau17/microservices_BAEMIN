@@ -22,6 +22,13 @@ func NewSqlErrorResponse(err error) RpcErrorResponse {
 	}
 }
 
+func NewErrorRpcResponse(statusCode int, err error) RpcErrorResponse {
+	return RpcErrorResponse{
+		StatusCode: statusCode,
+		Message:    err.Error(),
+	}
+}
+
 func ErrEntityNotFound(entityName string, id interface{}) error {
 	return fmt.Errorf("entity %s with ID %v not found", entityName, id)
 }
