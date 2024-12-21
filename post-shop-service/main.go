@@ -60,8 +60,6 @@ func main() {
 				continue
 			}
 
-			fmt.Printf("Received a message: %v", payloadQueue.Data)
-
 			switch payloadQueue.Pattern {
 			case "create_post_event":
 				if postData, ok := payloadQueue.Data.(map[string]interface{}); ok {
@@ -81,19 +79,18 @@ func main() {
 					if status, ok := postData["status"].(string); ok {
 						createPost.Status = status
 					}
-
-					// Sau khi ép kiểu và gán giá trị, gọi phương thức tạo bài viết
 					posttranport.CreatePost(appCtx, &createPost, &d)
 				} else {
 					log.Printf("Data in payloadQueue is not of type map[string]interface{}")
 				}
 			case "find_one_post_event":
 				if id, ok := payloadQueue.Data.(float64); ok { // RabbitMQ có thể gửi số dưới dạng float64
-					// Ép kiểu sang int64 sau khi đã kiểm tra kiểu float64
 					posttranport.FindPost(appCtx, int64(id), &d)
 				} else {
 					log.Printf("Data in payloadQueue is not of type int64")
 				}
+			case "post_by_shop_paging":
+
 			default:
 				fmt.Printf("Unknown pattern: %s\n", payloadQueue.Pattern)
 			}

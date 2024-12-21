@@ -42,8 +42,16 @@ export class PostService {
     return `This action returns all post`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} post`;
+  async findOne(id: number) {
+    const response = await lastValueFrom(
+      this.client.send('find_one_post_event', id).pipe(
+        handleRetryWithBackoff(3, 1000), // Thử lại 3 lần với độ trễ 1s, 2s, 4s
+      ),
+    );
+    if (response.statusCode && response.statusCode >= 400) {
+      throw new HttpException(response.message, response.statusCode);
+    }
+    return response;
   }
 
   update(id: number, updatePostDto: UpdatePostDto) {
