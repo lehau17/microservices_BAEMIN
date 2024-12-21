@@ -5,6 +5,8 @@ import (
 	"time"
 )
 
+const EntityName = "post"
+
 type Post struct {
 	ID           int           `db:"id"`            // Mã định danh bài viết
 	Title        string        `db:"title"`         // Tiêu đề bài viết

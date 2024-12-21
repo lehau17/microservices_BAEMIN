@@ -1,6 +1,10 @@
 package publish
 
-import "github.com/streadway/amqp"
+import (
+	"log"
+
+	"github.com/streadway/amqp"
+)
 
 type publishPayload struct {
 	exchange  string
@@ -28,4 +32,20 @@ func Publish(ch *amqp.Channel, payload *publishPayload) error {
 		payload.immediate,
 		payload.msg,
 	)
+}
+
+func PublishMessage(exchange, key, CorrelationId string, mandatory, immediate bool, response []byte, ch *amqp.Channel) error {
+
+	publishPayload := NewPublishPayload("", key, mandatory, immediate, amqp.Publishing{
+		ContentType:   "application/json",
+		CorrelationId: CorrelationId,
+		Body:          response,
+	})
+
+	err := Publish(ch, publishPayload)
+	if err != nil {
+		log.Printf("Failed to publish a message: %v", err)
+		panic(err)
+	}
+	return nil
 }

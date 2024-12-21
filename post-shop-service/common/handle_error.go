@@ -1,5 +1,7 @@
 package common
 
+import "fmt"
+
 // RpcResponse defines the standard response for RPC communication
 type RpcErrorResponse struct {
 	StatusCode int    `json:"statusCode"`
@@ -18,4 +20,13 @@ func NewSqlErrorResponse(err error) RpcErrorResponse {
 		StatusCode: 500,
 		Message:    err.Error(),
 	}
+}
+
+func ErrEntityNotFound(entityName string, id interface{}) error {
+	return fmt.Errorf("entity %s with ID %v not found", entityName, id)
+}
+
+// Tạo một lỗi CannotGetEntity
+func ErrCannotGetEntity(entityName string, err error) error {
+	return fmt.Errorf("cannot get entity %s: %v", entityName, err)
 }

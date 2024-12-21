@@ -3,7 +3,6 @@ package posttranport
 import (
 	"context"
 	"encoding/json"
-	"log"
 	"post-shop-service/common"
 	appcontext "post-shop-service/component/app_context"
 	"post-shop-service/component/publish"
@@ -24,29 +23,10 @@ func CreatePost(appCtx appcontext.AppContext, data *common.CreatePost, d *amqp.D
 	if err != nil {
 		errorResponse := common.NewSqlErrorResponse(err)
 		response, _ := json.Marshal(errorResponse)
-
-		publishPayload := publish.NewPublishPayload("", d.ReplyTo, false, false, amqp.Publishing{
-			ContentType:   "application/json",
-			CorrelationId: d.CorrelationId,
-			Body:          response,
-		})
-
-		err := publish.Publish(ch, publishPayload)
-		if err != nil {
-			log.Printf("Failed to publish a message: %v", err)
-		}
+		publish.PublishMessage("", d.ReplyTo, d.CorrelationId, false, false, response, ch)
 	} else {
 		response, _ = json.Marshal(map[string]interface{}{"id": id})
-		publishPayload := publish.NewPublishPayload("", d.ReplyTo, false, false, amqp.Publishing{
-			ContentType:   "application/json",
-			CorrelationId: d.CorrelationId,
-			Body:          response,
-		})
-		err := publish.Publish(ch, publishPayload)
-
-		if err != nil {
-			log.Printf("Failed to publish a message: %v", err)
-		}
+		publish.PublishMessage("", d.ReplyTo, d.CorrelationId, false, false, response, ch)
 	}
 
 }
