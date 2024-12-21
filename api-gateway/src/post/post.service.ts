@@ -3,6 +3,8 @@ import { Injectable } from '@nestjs/common';
 import { Client, ClientProxy, Transport } from '@nestjs/microservices';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { catchError, lastValueFrom, throwError } from 'rxjs';
+import { CreatePostDto } from './dto/create-post.dto';
+import { handleRetryWithBackoff } from 'src/common/utils/handlerTimeoutWithBackoff';
 
 @Injectable()
 export class PostService {
@@ -19,17 +21,15 @@ export class PostService {
   })
   client: ClientProxy;
 
-  async create(createPostDto: any) {
-    const message = { text: createPostDto.text };
+  async create(createPostDto: CreatePostDto) {
     const response = await lastValueFrom(
-      this.client.send('create_post_event', message).pipe(
-        catchError((err, response) => {
-          console.log(err, response);
-          return throwError(err); // This should be throwError, not returning the error directly.
+      this.client.send('create_post_event', createPostDto).pipe(
+        catchError((error) => {
+          console.log('Error when send create_post_event', error);
+          return throwError(error);
         }),
       ),
     );
-    console.log(response);
 
     return response;
   }
