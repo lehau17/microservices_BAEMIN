@@ -26,7 +26,7 @@ func main() {
 	db := config.NewSqlInstance()
 	appCtx := appcontext.NewAppContext(db, ch)
 
-	// Khai báo hàng đợic
+	// Khai báo hàng đợi
 	q, err := ch.QueueDeclare(
 		"go_service_queue", // Tên hàng đợi
 		true,               // durable
@@ -53,42 +53,50 @@ func main() {
 
 	go func() {
 		for d := range msgs {
-			var payloadQueue common.PayloadQueue[common.CreatePost]
-			// fmt.Printf("Received a message: %v\n", d.Body)
-
+			var payloadQueue common.PayloadQueue
 			err := json.Unmarshal(d.Body, &payloadQueue)
 			if err != nil {
 				log.Printf("Failed to unmarshal message: %v", err)
 				continue
 			}
 
-			// fmt.Printf("Received a message: %v\n", payloadQueue.Data.Content)
+			fmt.Printf("Received a message: %v", payloadQueue.Data)
 
-			// Xử lý pattern
 			switch payloadQueue.Pattern {
 			case "create_post_event":
-				fmt.Println("Create post event")
-				posttranport.CreatePost(appCtx, &payloadQueue.Data, &d)
-				// Thực hiện xử lý logic ở đây
+				if postData, ok := payloadQueue.Data.(map[string]interface{}); ok {
+					var createPost common.CreatePost
+					if title, ok := postData["title"].(string); ok {
+						createPost.Title = title
+					}
+					if content, ok := postData["content"].(string); ok {
+						createPost.Content = content
+					}
+					if shopID, ok := postData["shop_id"].(float64); ok { // float64 vì RabbitMQ có thể gửi số như vậy
+						createPost.ShopID = int(shopID)
+					}
+					if hashtag, ok := postData["hashtag"].(string); ok {
+						createPost.Hashtag = hashtag
+					}
+					if status, ok := postData["status"].(string); ok {
+						createPost.Status = status
+					}
+
+					// Sau khi ép kiểu và gán giá trị, gọi phương thức tạo bài viết
+					posttranport.CreatePost(appCtx, &createPost, &d)
+				} else {
+					log.Printf("Data in payloadQueue is not of type map[string]interface{}")
+				}
+			case "find_one_post_event":
+				if id, ok := payloadQueue.Data.(float64); ok { // RabbitMQ có thể gửi số dưới dạng float64
+					// Ép kiểu sang int64 sau khi đã kiểm tra kiểu float64
+					posttranport.FindPost(appCtx, int64(id), &d)
+				} else {
+					log.Printf("Data in payloadQueue is not of type int64")
+				}
 			default:
 				fmt.Printf("Unknown pattern: %s\n", payloadQueue.Pattern)
 			}
-
-			// Gửi phản hồi lại qua reply-to
-			// err = ch.Publish(
-			// 	"",        // exchange
-			// 	d.ReplyTo, // routing key (reply-to queue)
-			// 	false,     // mandatory
-			// 	false,     // immediate
-			// 	amqp.Publishing{
-			// 		ContentType:   "application/json",
-			// 		CorrelationId: d.CorrelationId,
-			// 		Body:          d.Body,
-			// 	},
-			// )
-			// if err != nil {
-			// 	log.Printf("Failed to publish a message: %v", err)
-			// }
 		}
 	}()
 

@@ -10,10 +10,10 @@ const (
 	Deleted   Status = "deleted"
 )
 
-type PayloadQueue[T any] struct {
-	Id      string `json:"id"`
-	Data    T      `json:"data"` // Thay interface{} bằng T
-	Pattern string `json:"pattern"`
+type PayloadQueue struct {
+	Id      string      `json:"id"`
+	Data    interface{} `json:"data"` // Thay interface{} bằng T
+	Pattern string      `json:"pattern"`
 }
 
 type CreatePost struct {
