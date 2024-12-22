@@ -2,11 +2,12 @@ package postbiz
 
 import (
 	"context"
+	"post-shop-service/common/paging"
 	postmodel "post-shop-service/module/post/model"
 )
 
 type FindAllPostStorage interface {
-	FindAll(ctx context.Context) ([]postmodel.Post, error)
+	FindAll(ctx context.Context, paging *paging.Paging) ([]postmodel.Post, error)
 }
 
 type findAllPostBiz struct {
@@ -17,8 +18,8 @@ func NewFindAllPostBiz(store FindAllPostStorage) *findAllPostBiz {
 	return &findAllPostBiz{store: store}
 }
 
-func (biz *findAllPostBiz) FindAll(ctx context.Context) ([]postmodel.Post, error) {
-	posts, err := biz.store.FindAll(ctx)
+func (biz *findAllPostBiz) FindAll(ctx context.Context, paging *paging.Paging) ([]postmodel.Post, error) {
+	posts, err := biz.store.FindAll(ctx, paging)
 	if err != nil {
 		return nil, err
 	}
