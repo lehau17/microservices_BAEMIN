@@ -32,6 +32,11 @@ export class PostController {
     return this.postService.findOne(+id);
   }
 
+  @Get('/shop/:id')
+  findByShop(@Param('id') id: string, paging: PagingDtoV2) {
+    return this.postService.findByShop(+id, paging);
+  }
+
   @Patch(':id')
   update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
     return this.postService.update(+id, updatePostDto);

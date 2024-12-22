@@ -2,6 +2,8 @@ package poststorage
 
 import (
 	"context"
+	"post-shop-service/common"
+	httpstatus "post-shop-service/common/http_status"
 	"post-shop-service/common/paging"
 	postmodel "post-shop-service/module/post/model"
 )
@@ -35,8 +37,7 @@ func (s *sqlStore) FindAllByShop(ctx context.Context, paging *paging.Paging, sho
 	// Execute query
 	err := s.db.SelectContext(ctx, &posts, query, args...)
 	if err != nil {
-		return nil, err
+		return nil, common.NewErrorRpcResponse(httpstatus.StatusInternalServerError, err)
 	}
-
 	return posts, nil
 }

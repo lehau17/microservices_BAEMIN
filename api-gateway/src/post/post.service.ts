@@ -39,6 +39,18 @@ export class PostService {
     return response;
   }
 
+  async findByShop(id: number, paging: PagingDtoV2) {
+    const response = await lastValueFrom(
+      this.client
+        .send('find_all_by_shop', { shop_id: id, ...paging })
+        .pipe(handleRetryWithBackoff(3, 1000)),
+    );
+    if (response.statusCode && response.statusCode >= 400) {
+      throw new HttpException(response.message, response.statusCode);
+    }
+    return response;
+  }
+
   async findAll(paging: PagingDtoV2) {
     const response = await lastValueFrom(
       this.client

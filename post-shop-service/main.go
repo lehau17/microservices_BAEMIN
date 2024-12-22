@@ -123,7 +123,37 @@ func main() {
 				} else {
 					log.Printf("Data in payloadQueue is not of type int64")
 				}
+			case "find_all_by_shop":
+				if pagingData, ok := payloadQueue.Data.(map[string]interface{}); ok {
+					fmt.Printf("pagingData: %v\n %t", pagingData, pagingData["shop_id"])
+					var p paging.Paging
+					var shop_id int
+					if page, ok := pagingData["page"].(string); ok {
+						page, _ := strconv.Atoi(page)
+						p.Page = page
+					}
+					if shop_id_payload, ok := pagingData["shop_id"].(float64); ok {
+						shop_id_int := int(shop_id_payload)
+						shop_id = (shop_id_int)
+					}
+					if limit, ok := pagingData["limit"].(string); ok {
+						limit, _ := strconv.Atoi(limit)
+						p.Limit = limit
+					}
 
+					if cursor, ok := pagingData["cursor"].(string); ok {
+						cursor, err := strconv.Atoi(cursor)
+						if err != nil {
+							log.Printf("Failed to convert cursor to int: %v", err)
+						} else {
+							p.Cursor = &cursor
+						}
+					}
+					p.Validate()
+					posttranport.FindAllByShop(appCtx, &p, &d, int(shop_id))
+				} else {
+					log.Printf("Data in payloadQueue is not of type map[string]interface{}")
+				}
 			default:
 				fmt.Printf("Unknown pattern: %s\n", payloadQueue.Pattern)
 			}
