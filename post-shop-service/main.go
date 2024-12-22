@@ -154,6 +154,12 @@ func main() {
 				} else {
 					log.Printf("Data in payloadQueue is not of type map[string]interface{}")
 				}
+			case "increase_like_post":
+				if id, ok := payloadQueue.Data.(float64); ok {
+					posttranport.IncreaseLike(appCtx, int(id), &d)
+				} else {
+					log.Printf("Data in payloadQueue is not of type int64")
+				}
 			default:
 				fmt.Printf("Unknown pattern: %s\n", payloadQueue.Pattern)
 			}

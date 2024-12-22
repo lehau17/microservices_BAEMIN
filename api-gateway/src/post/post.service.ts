@@ -79,6 +79,28 @@ export class PostService {
     return `This action updates a #${id} post`;
   }
 
+  async increaseOneLike(post_id: number) {
+    const response = await lastValueFrom(
+      this.client.send('increase_one_like', post_id).pipe(
+        handleRetryWithBackoff(3, 1000), // Thử lại 3 lần với độ trễ 1s, 2s, 4s
+      ),
+    );
+    if (response.statusCode && response.statusCode >= 400) {
+      throw new HttpException(response.message, response.statusCode);
+    }
+  }
+
+  async decreaseOneLike(post_id: number) {
+    const response = await lastValueFrom(
+      this.client.send('decrease_one_like', post_id).pipe(
+        handleRetryWithBackoff(3, 1000), // Thử lại 3 lần với độ trễ 1s, 2s, 4s
+      ),
+    );
+    if (response.statusCode && response.statusCode >= 400) {
+      throw new HttpException(response.message, response.statusCode);
+    }
+  }
+
   async remove(id: number) {
     const response = await lastValueFrom(
       this.client.send('delete_post', id).pipe(
