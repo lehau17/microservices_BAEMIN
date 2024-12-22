@@ -9,6 +9,7 @@ import (
 	appcontext "post-shop-service/component/app_context"
 	"post-shop-service/config"
 	posttranport "post-shop-service/module/post/tranport"
+	"strconv"
 )
 
 func failOnError(err error, msg string) {
@@ -92,15 +93,25 @@ func main() {
 				}
 			case "find_all_paging":
 				if pagingData, ok := payloadQueue.Data.(map[string]interface{}); ok {
+
 					var p paging.Paging
-					if page, ok := pagingData["page"].(float64); ok {
-						p.Page = int(page)
+					if page, ok := pagingData["page"].(string); ok {
+						page, _ := strconv.Atoi(page)
+						p.Page = page
 					}
-					if pageSize, ok := pagingData["page_size"].(float64); ok {
-						p.Limit = int(pageSize)
+					if limit, ok := pagingData["limit"].(string); ok {
+						limit, _ := strconv.Atoi(limit)
+						p.Limit = limit
 					}
-					if cursor, ok := pagingData["cursor"].(float64); ok {
-						*p.Cursor = int(cursor)
+
+					if cursor, ok := pagingData["cursor"].(string); ok {
+						cursor, err := strconv.Atoi(cursor)
+						if err != nil {
+							log.Printf("Failed to convert cursor to int: %v", err)
+						} else {
+							p.Cursor = &cursor
+
+						}
 					}
 					p.Validate()
 					posttranport.FindAllPost(appCtx, &p, &d)

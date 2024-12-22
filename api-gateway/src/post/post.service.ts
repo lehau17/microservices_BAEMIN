@@ -10,6 +10,7 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import { catchError, lastValueFrom, throwError } from 'rxjs';
 import { CreatePostDto } from './dto/create-post.dto';
 import { handleRetryWithBackoff } from 'src/common/utils/handlerTimeoutWithBackoff';
+import { PagingDto, PagingDtoV2 } from 'src/common/dto/paging.dto';
 
 @Injectable()
 export class PostService {
@@ -38,8 +39,16 @@ export class PostService {
     return response;
   }
 
-  findAll() {
-    return `This action returns all post`;
+  async findAll(paging: PagingDtoV2) {
+    const response = await lastValueFrom(
+      this.client
+        .send('find_all_paging', paging)
+        .pipe(handleRetryWithBackoff(3, 1000)),
+    );
+    if (response.statusCode && response.statusCode >= 400) {
+      throw new HttpException(response.message, response.statusCode);
+    }
+    return response;
   }
 
   async findOne(id: number) {

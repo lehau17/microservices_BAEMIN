@@ -8,3 +8,12 @@ export class PagingDto {
   @IsOptional()
   cursor?: number;
 }
+
+export class PagingDtoV2 {
+  @IsOptional()
+  limit?: number;
+  @IsOptional()
+  page?: number;
+  @IsOptional()
+  cursor?: number;
+}

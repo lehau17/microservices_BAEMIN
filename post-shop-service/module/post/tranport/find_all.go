@@ -3,6 +3,7 @@ package posttranport
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"post-shop-service/common"
 	"post-shop-service/common/paging"
 	appcontext "post-shop-service/component/app_context"
@@ -14,6 +15,7 @@ import (
 )
 
 func FindAllPost(appCtx appcontext.AppContext, paging *paging.Paging, d *amqp.Delivery) {
+	fmt.Printf("paging ở tranport: %v\n", paging)
 	ch := appCtx.GetChannel()
 	storage := poststorage.NewSqlStore(appCtx.GetMainDBConnection())
 	biz := postbiz.NewFindAllPostBiz(storage)
