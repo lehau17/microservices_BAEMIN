@@ -110,7 +110,6 @@ func main() {
 							log.Printf("Failed to convert cursor to int: %v", err)
 						} else {
 							p.Cursor = &cursor
-
 						}
 					}
 					p.Validate()

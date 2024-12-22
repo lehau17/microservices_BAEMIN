@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"post-shop-service/common"
+	httpstatus "post-shop-service/common/http_status"
 	appcontext "post-shop-service/component/app_context"
 	"post-shop-service/component/publish"
 	postbiz "post-shop-service/module/post/biz"
@@ -19,8 +20,14 @@ func DeletePost(appCtx appcontext.AppContext, data int64, d *amqp.Delivery) {
 	var response []byte
 	err := biz.DeletePost(context.Background(), data)
 	if err != nil {
-		errorResponse := common.NewErrorRpcResponse(400, err)
-		response, _ := json.Marshal(errorResponse)
+		var response []byte
+		errorResponse, ok := err.(common.RpcErrorResponse)
+		if ok {
+			response, _ = json.Marshal(errorResponse)
+		} else {
+			errorResponse = common.NewErrorRpcResponse(httpstatus.StatusInternalServerError, err)
+			response, _ = json.Marshal(errorResponse)
+		}
 		publish.PublishMessage("", d.ReplyTo, d.CorrelationId, false, false, response, ch)
 	} else {
 		response, _ = json.Marshal(true)

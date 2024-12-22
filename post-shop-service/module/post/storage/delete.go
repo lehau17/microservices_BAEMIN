@@ -2,7 +2,6 @@ package poststorage
 
 import (
 	"context"
-	"fmt"
 	"post-shop-service/common"
 )
 
@@ -17,12 +16,13 @@ func (s *sqlStore) DeletePost(ctx context.Context, postID int64) error {
 	}
 	result, err := s.db.NamedExec(query, params)
 	if err != nil {
-		return common.NewErrorResponse(400, "Lỗi database khi xóa post")
+		return common.NewErrorResponse(500, "Lỗi database khi xóa post")
 	}
 
 	rowsAffected, _ := result.RowsAffected()
 	if rowsAffected == 0 {
-		return fmt.Errorf("no post found with ID %d", postID)
+		return common.NewErrorResponse(400, "Not found post")
+
 	}
 
 	return nil
