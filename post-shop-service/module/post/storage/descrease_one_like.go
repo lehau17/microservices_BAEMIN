@@ -10,12 +10,14 @@ func (s *sqlStore) DescreaseLike(ctx context.Context, postID int) error {
 	query := `UPDATE post
 		SET total_like = total_like - 1
 		WHERE id = ? and status = 'published'`
-	if result, err := s.db.ExecContext(ctx, query, postID); err != nil {
-		rowAffect, _ := result.RowsAffected()
-		if rowAffect == 0 {
-			return common.NewErrorRpcResponse(httpstatus.StatusBadRequest, err)
-		}
+	result, err := s.db.ExecContext(ctx, query, postID)
+	if err != nil {
+
 		return common.NewErrorRpcResponse(httpstatus.StatusInternalServerError, err)
+	}
+	rowAffect, _ := result.RowsAffected()
+	if rowAffect == 0 {
+		return common.NewErrorRpcResponse(httpstatus.StatusBadRequest, err)
 	}
 	return nil
 }
