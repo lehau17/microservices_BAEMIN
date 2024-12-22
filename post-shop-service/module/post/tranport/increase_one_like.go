@@ -27,9 +27,8 @@ func IncreaseLike(appCtx appcontext.AppContext, post_id int, d *amqp.Delivery) {
 			errorResponse = common.NewErrorRpcResponse(httpstatus.StatusInternalServerError, err)
 			response, _ = json.Marshal(errorResponse)
 		}
-		publish.PublishMessage("", d.ReplyTo, d.CorrelationId, false, false, response, ch)
 	} else {
-		response, _ = json.Marshal(true)
-		publish.PublishMessage("", d.ReplyTo, d.CorrelationId, false, false, response, ch)
+		response, _ = json.Marshal(map[string]interface{}{"isSuccess": true})
 	}
+	publish.PublishMessage("", d.ReplyTo, d.CorrelationId, false, false, response, ch)
 }

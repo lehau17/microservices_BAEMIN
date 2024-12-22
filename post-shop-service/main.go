@@ -154,7 +154,7 @@ func main() {
 				} else {
 					log.Printf("Data in payloadQueue is not of type map[string]interface{}")
 				}
-			case "increase_like_post":
+			case "increase_one_like":
 				if id, ok := payloadQueue.Data.(float64); ok {
 					posttranport.IncreaseLike(appCtx, int(id), &d)
 				} else {

@@ -88,6 +88,7 @@ export class PostService {
     if (response.statusCode && response.statusCode >= 400) {
       throw new HttpException(response.message, response.statusCode);
     }
+    return response;
   }
 
   async decreaseOneLike(post_id: number) {
@@ -99,6 +100,7 @@ export class PostService {
     if (response.statusCode && response.statusCode >= 400) {
       throw new HttpException(response.message, response.statusCode);
     }
+    return response;
   }
 
   async remove(id: number) {
