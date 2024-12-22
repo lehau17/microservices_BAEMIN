@@ -118,6 +118,12 @@ func main() {
 				} else {
 					log.Printf("Data in payloadQueue is not of type map[string]interface{}")
 				}
+			case "delete_post":
+				if id, ok := payloadQueue.Data.(float64); ok {
+					posttranport.DeletePost(appCtx, int64(id), &d)
+				} else {
+					log.Printf("Data in payloadQueue is not of type int64")
+				}
 
 			default:
 				fmt.Printf("Unknown pattern: %s\n", payloadQueue.Pattern)
