@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"post-shop-service/common"
+	"post-shop-service/common/paging"
 	appcontext "post-shop-service/component/app_context"
 	"post-shop-service/config"
 	posttranport "post-shop-service/module/post/tranport"
@@ -89,7 +90,23 @@ func main() {
 				} else {
 					log.Printf("Data in payloadQueue is not of type int64")
 				}
-			case "post_by_shop_paging":
+			case "find_all_paging":
+				if pagingData, ok := payloadQueue.Data.(map[string]interface{}); ok {
+					var p paging.Paging
+					if page, ok := pagingData["page"].(float64); ok {
+						p.Page = int(page)
+					}
+					if pageSize, ok := pagingData["page_size"].(float64); ok {
+						p.Limit = int(pageSize)
+					}
+					if cursor, ok := pagingData["cursor"].(float64); ok {
+						*p.Cursor = int(cursor)
+					}
+					p.Validate()
+					posttranport.FindAllPost(appCtx, &p, &d)
+				} else {
+					log.Printf("Data in payloadQueue is not of type map[string]interface{}")
+				}
 
 			default:
 				fmt.Printf("Unknown pattern: %s\n", payloadQueue.Pattern)
