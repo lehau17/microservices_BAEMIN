@@ -29,3 +29,10 @@ type CreatePost struct {
 	Hashtag string `db:"hashtag"`
 	Status  string `db:"status"`
 }
+
+type QueryPost struct {
+	Title   string `db:"title"`
+	ShopID  int    `db:"shop_id"`
+	Hashtag string `db:"hashtag"`
+	Status  string `db:"status"`
+}
