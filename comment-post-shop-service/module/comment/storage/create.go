@@ -4,9 +4,10 @@ import (
 	"comment-post-shop-service/common"
 	httpstatus "comment-post-shop-service/common/http_status"
 	commentmodel "comment-post-shop-service/module/comment/model"
+	"context"
 )
 
-func (s *sqlStorage) Create(comment *commentmodel.CommentCreate) (int64, error) {
+func (s *sqlStorage) Create(ctx context.Context, comment *commentmodel.CommentCreate) (int64, error) {
 	query := `
         INSERT INTO comments (post_id, user, content)
         VALUES (:post_id, :user, :content)
