@@ -4,6 +4,7 @@ import { UpdateCommentDto } from './dto/update-comment.dto';
 import { ClientProxy } from '@nestjs/microservices';
 import { handleRetryWithBackoff } from 'src/common/utils/handlerTimeoutWithBackoff';
 import { lastValueFrom } from 'rxjs';
+import { PagingDtoV2 } from 'src/common/dto/paging.dto';
 
 @Injectable()
 export class CommentService {
@@ -31,8 +32,19 @@ export class CommentService {
     return response;
   }
 
-  findAll() {
-    return `This action returns all comment`;
+  async findAll(id: number, paging: PagingDtoV2) {
+    const response = await lastValueFrom(
+      this.commentService
+        .send('find_all_by_post', {
+          ...paging,
+          post_id: id,
+        })
+        .pipe(handleRetryWithBackoff(3, 2000)),
+    );
+    if (response.statusCode && response.statusCode >= 400) {
+      throw new HttpException(response.message, response.statusCode);
+    }
+    return response;
   }
 
   findOne(id: number) {

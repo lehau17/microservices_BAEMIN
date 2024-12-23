@@ -8,12 +8,14 @@ import {
   Delete,
   Req,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { CommentService } from './comment.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { AccessTokenGuard } from 'src/common/guards/accessToken.guard';
 import { TokenPayload } from 'src/common/dto/tokenPayload.jwt.dto';
+import { PagingDtoV2 } from 'src/common/dto/paging.dto';
 
 @Controller('comment')
 export class CommentController {
@@ -29,9 +31,9 @@ export class CommentController {
     return this.commentService.create(createCommentDto, sub, username);
   }
 
-  @Get()
-  findAll() {
-    return this.commentService.findAll();
+  @Get('post/:id')
+  findAll(@Query() paging: PagingDtoV2, @Param('id') id: string) {
+    return this.commentService.findAll(+id, paging);
   }
 
   @Get(':id')
