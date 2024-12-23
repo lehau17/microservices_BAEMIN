@@ -20,6 +20,7 @@ import { VoucherUsageModule } from './voucher-usage/voucher-usage.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { PostModule } from './post/posts.module';
+import { CommentModule } from './comment/comment.module';
 
 @Global()
 @Module({
@@ -148,6 +149,7 @@ import { PostModule } from './post/posts.module';
     OrdersModule,
     VoucherUsageModule,
     PostModule,
+    CommentModule,
   ],
   controllers: [AppController],
   providers: [
