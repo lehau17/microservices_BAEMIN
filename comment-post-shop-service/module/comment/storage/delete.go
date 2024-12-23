@@ -3,10 +3,11 @@ package commentstorage
 import (
 	"comment-post-shop-service/common"
 	httpstatus "comment-post-shop-service/common/http_status"
+	"context"
 	"errors"
 )
 
-func (s *sqlStorage) Delete(commentID int64) (int64, error) {
+func (s *sqlStorage) Delete(ctx context.Context, commentID int64) (int64, error) {
 	// Truy vấn SQL để xóa bình luận theo ID
 	query := `
         DELETE FROM comments 
