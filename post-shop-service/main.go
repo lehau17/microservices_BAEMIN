@@ -5,7 +5,9 @@ import (
 	"log"
 	"post-shop-service/common"
 	appcontext "post-shop-service/component/app_context"
+	"post-shop-service/component/comsumer"
 	handlermessagebroken "post-shop-service/component/handler_message_broken"
+	queuedeclare "post-shop-service/component/queue_declare"
 	"post-shop-service/config"
 )
 
@@ -26,26 +28,11 @@ func main() {
 	appCtx := appcontext.NewAppContext(db, ch)
 
 	// Khai báo hàng đợi
-	q, err := ch.QueueDeclare(
-		"go_service_queue", // Tên hàng đợi
-		true,               // durable
-		false,              // delete when unused
-		false,              // exclusive
-		false,              // no-wait
-		nil,                // arguments
-	)
+	q, err := queuedeclare.QueueDeclare(ch)
 	failOnError(err, "Failed to declare a queue")
 
 	// Đăng ký consumer
-	msgs, err := ch.Consume(
-		q.Name, // Tên hàng đợi
-		"",     // consumer
-		true,   // auto-ack
-		false,  // exclusive
-		false,  // no-local
-		false,  // no-wait
-		nil,    // args
-	)
+	msgs, err := comsumer.Consumer(ch, &q)
 	failOnError(err, "Failed to register a consumer")
 
 	forever := make(chan bool)
