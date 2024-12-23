@@ -38,12 +38,12 @@ func HandlerMessageBroken(payloadQueue *common.PayloadQueue, d *amqp.Delivery, a
 		} else {
 			log.Printf("Data in payloadQueue is not of type map[string]interface{}")
 		}
-	case "find_one_post_event":
-		// if id, ok := payloadQueue.Data.(float64); ok { // RabbitMQ có thể gửi số dưới dạng float64
-		// 	posttranport.FindPost(appCtx, int64(id), d)
-		// } else {
-		// 	log.Printf("Data in payloadQueue is not of type int64")
-		// }
+	case "delete_comment":
+		if id, ok := payloadQueue.Data.(float64); ok { // RabbitMQ có thể gửi số dưới dạng float64
+			messagebrokenrabbitmq.DeleteComment(appCtx, int64(id), d)
+		} else {
+			log.Printf("Data in payloadQueue is not of type int64")
+		}
 	case "find_all_paging":
 		// if pagingData, ok := payloadQueue.Data.(map[string]interface{}); ok {
 
