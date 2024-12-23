@@ -2,6 +2,7 @@ package poststorage
 
 import (
 	"context"
+	"errors"
 	"post-shop-service/common"
 	httpstatus "post-shop-service/common/http_status"
 )
@@ -17,7 +18,7 @@ func (s *sqlStore) DescreaseLike(ctx context.Context, postID int) error {
 	}
 	rowAffect, _ := result.RowsAffected()
 	if rowAffect == 0 {
-		return common.NewErrorRpcResponse(httpstatus.StatusBadRequest, err)
+		return common.NewErrorRpcResponse(httpstatus.StatusBadRequest, errors.New("Post not found"))
 	}
 	return nil
 }

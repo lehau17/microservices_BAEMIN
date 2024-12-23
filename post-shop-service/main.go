@@ -160,6 +160,12 @@ func main() {
 				} else {
 					log.Printf("Data in payloadQueue is not of type int64")
 				}
+			case "decrease_one_like":
+				if id, ok := payloadQueue.Data.(float64); ok {
+					posttranport.DescreaseLike(appCtx, int(id), &d)
+				} else {
+					log.Printf("Data in payloadQueue is not of type int64")
+				}
 			default:
 				fmt.Printf("Unknown pattern: %s\n", payloadQueue.Pattern)
 			}
