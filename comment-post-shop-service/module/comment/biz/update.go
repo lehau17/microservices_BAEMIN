@@ -20,5 +20,5 @@ func NewCommentUpdateBiz(
 }
 
 func (b *commentUpdateBiz) UpdateComment(ctx context.Context, data *commentmodel.CommentUpdate) (*commentmodel.Comment, error) {
-	return b.store.UpdateComment(ctx, comment)
+	return b.store.UpdateComment(ctx, data)
 }

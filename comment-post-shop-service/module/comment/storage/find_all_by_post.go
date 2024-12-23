@@ -8,7 +8,7 @@ import (
 	"context"
 )
 
-func (s *sqlStorage) FindAllByShop(ctx context.Context, paging *paging.Paging, post_id int64) ([]commentmodel.Comment, error) {
+func (s *sqlStorage) FindAllByPost(ctx context.Context, paging *paging.Paging, post_id int64) ([]commentmodel.Comment, error) {
 	// Validate and set default values for paging
 	paging.Validate()
 
