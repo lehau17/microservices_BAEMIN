@@ -15,5 +15,5 @@ func NewDeleteCommentBiz(store DeleteCommentStorage) *deleteCommentBiz {
 }
 
 func (b *deleteCommentBiz) Delete(ctx context.Context, commentID int64) (int64, error) {
-	return b.store.DeleteComment(ctx, commentID)
+	return b.store.Delete(ctx, commentID)
 }
