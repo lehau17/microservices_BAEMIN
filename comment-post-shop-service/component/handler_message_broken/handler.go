@@ -44,7 +44,20 @@ func HandlerMessageBroken(payloadQueue *common.PayloadQueue, d *amqp.Delivery, a
 		} else {
 			log.Printf("Data in payloadQueue is not of type int64")
 		}
-	case "find_all_paging":
+	case "update_comment":
+		if payloadUpdateComment, ok := payloadQueue.Data.(map[string]interface{}); ok {
+			var comment commentmodel.CommentUpdate
+			if id, ok := payloadUpdateComment["id"].(float64); ok {
+				comment.ID = int64(id)
+			}
+			if userId, ok := payloadUpdateComment["user_id"].(float64); ok {
+				comment.UserID = int64(userId)
+			}
+			if content, ok := payloadUpdateComment["content"].(string); ok {
+				comment.Content = content
+			}
+			messagebrokenrabbitmq.UpdateComment(appCtx, &comment, d)
+		}
 		// if pagingData, ok := payloadQueue.Data.(map[string]interface{}); ok {
 
 		// 	var p paging.Paging

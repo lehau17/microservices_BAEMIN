@@ -27,6 +27,6 @@ type CommentCreate struct {
 
 type CommentUpdate struct {
 	ID      int64  `db:"id" json:"id"`
-	UserID  string `json:"user_id"`
+	UserID  int64  `json:"user_id"`
 	Content string `db:"content" json:"content"`
 }
