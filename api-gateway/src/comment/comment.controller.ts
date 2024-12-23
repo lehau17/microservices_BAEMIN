@@ -40,8 +40,15 @@ export class CommentController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCommentDto: UpdateCommentDto) {
-    return this.commentService.update(+id, updateCommentDto);
+  @UseGuards(AccessTokenGuard)
+  update(
+    @Param('id') id: string,
+    @Body() updateCommentDto: UpdateCommentDto,
+    @Req() req: Express.Request,
+  ) {
+    const { sub } = req.user as TokenPayload;
+
+    return this.commentService.update(+id, updateCommentDto, sub);
   }
 
   @Delete(':id')

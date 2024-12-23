@@ -39,8 +39,20 @@ export class CommentService {
     return `This action returns a #${id} comment`;
   }
 
-  update(id: number, updateCommentDto: UpdateCommentDto) {
-    return `This action updates a #${id} comment`;
+  async update(
+    id: number,
+    updateCommentDto: UpdateCommentDto,
+    user_id: number,
+  ) {
+    const response = await lastValueFrom(
+      this.commentService
+        .send('update_comment', { id, ...updateCommentDto, user_id })
+        .pipe(handleRetryWithBackoff(3, 2000)),
+    );
+    if (response.statusCode && response.statusCode >= 400) {
+      throw new HttpException(response.message, response.statusCode);
+    }
+    return response;
   }
 
   async remove(id: number, user_id: number) {
