@@ -98,12 +98,12 @@ func HandlerMessageBroken(payloadQueue *common.PayloadQueue, d *amqp.Delivery, a
 		} else {
 			log.Printf("Data in payloadQueue is not of type map[string]interface{}")
 		}
-	case "increase_one_like":
-		// if id, ok := payloadQueue.Data.(float64); ok {
-		// 	posttranport.IncreaseLike(appCtx, int(id), d)
-		// } else {
-		// 	log.Printf("Data in payloadQueue is not of type int64")
-		// }
+	case "count_comment_by_post":
+		if id, ok := payloadQueue.Data.(float64); ok {
+			messagebrokenrabbitmq.TotalCountCommentByPost(appCtx, int64(id), d)
+		} else {
+			log.Printf("Data in payloadQueue is not of type int64")
+		}
 	case "decrease_one_like":
 		// if id, ok := payloadQueue.Data.(float64); ok {
 		// 	posttranport.DescreaseLike(appCtx, int(id), d)
