@@ -1,3 +1,4 @@
+import { handleRetryWithBackoff } from 'src/common/utils/handlerTimeoutWithBackoff';
 import { Injectable, Inject, HttpStatus } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Prisma } from '@prisma/client';
@@ -166,6 +167,13 @@ export class OrdersService {
         food_id: item.food_id,
         quantity: item.quantity,
       }));
+
+      await lastValueFrom(
+        this.productService
+          .send('checkStock', payloadDesStock)
+          .pipe(handleRetryWithBackoff(3, 1000)),
+      );
+
       this.productService.emit('desStock', payloadDesStock);
 
       // Add to created orders list

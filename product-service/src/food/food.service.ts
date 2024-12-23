@@ -269,6 +269,31 @@ export class FoodService {
     });
   }
 
+  async checkStock(food_id: number, quantity: number) {
+    const foundFood = await this.findOne(food_id);
+    if (!foundFood || foundFood.status === 0) {
+      throw new RpcException({
+        message: 'food not found',
+        statusCode: HttpStatus.BAD_REQUEST,
+      });
+    }
+    if (foundFood.foods_details.food_stock < quantity) {
+      throw new RpcException({
+        message: 'out of stock',
+        statusCode: HttpStatus.BAD_REQUEST,
+      });
+    }
+    return true;
+  }
+
+  async checkAllStock(payload: { food_id: number; quantity: number }[]) {
+    const promiseCheckStock = payload.map((item) => {
+      return this.checkStock(item.food_id, item.quantity);
+    });
+    await Promise.all(promiseCheckStock);
+    return true;
+  }
+
   async desManyStock(payload: { food_id: number; quantity: number }[]) {
     const promiseHandler = payload.map((item) => {
       return this.desStock(item);

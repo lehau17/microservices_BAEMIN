@@ -50,4 +50,9 @@ export class FoodController {
   updateStock(@Payload() payload: { food_id: number; quantity: number }[]) {
     return this.foodService.desManyStock(payload);
   }
+
+  @MessagePattern('checkStock')
+  checkStock(@Payload() payload: { food_id: number; quantity: number }[]) {
+    return this.foodService.checkAllStock(payload);
+  }
 }
