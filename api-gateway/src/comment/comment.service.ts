@@ -51,6 +51,18 @@ export class CommentService {
     return `This action returns a #${id} comment`;
   }
 
+  async countCommentByPost(post_id: number) {
+    const response = await lastValueFrom(
+      this.commentService
+        .send('count_comment_by_post', post_id)
+        .pipe(handleRetryWithBackoff(3, 2000)),
+    );
+    if (response.statusCode && response.statusCode >= 400) {
+      throw new HttpException(response.message, response.statusCode);
+    }
+    return response;
+  }
+
   async update(
     id: number,
     updateCommentDto: UpdateCommentDto,

@@ -35,6 +35,10 @@ export class CommentController {
   findAll(@Query() paging: PagingDtoV2, @Param('id') id: string) {
     return this.commentService.findAll(+id, paging);
   }
+  @Get('post/:id/total-comments')
+  countCommentByPost(@Param('id') id: string) {
+    return this.commentService.countCommentByPost(+id);
+  }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
