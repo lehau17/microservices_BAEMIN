@@ -24,7 +24,7 @@ services:
     networks:
       - node-network
     depends_on:
-      - postgres
+      - mysql
 
   order-service:
     container_name: order-service
@@ -86,8 +86,9 @@ services:
     networks:
       - node-network
     volumes:
-      - ./volumes/mysql/data:/var/lib/mysql
+      - mysql-data:/var/lib/mysql
       - ./volumes/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+
   postgres:
     container_name: some-ostgres
     image: postgres:latest
@@ -99,7 +100,7 @@ services:
     networks:
       - node-network
     volumes:
-      - ./volumes/postgres/data:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql/data
       - ./volumes/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
 
   rabbitmq:
@@ -131,4 +132,4 @@ networks:
 
 volumes:
   postgres-data:
-    driver: local
+  mysql-data:
