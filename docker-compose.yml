@@ -18,6 +18,13 @@ services:
       - node-network
     depends_on:
       - postgres
+  post-shop-service:
+    container_name: post-shop-service
+    build: ./post-shop-service
+    networks:
+      - node-network
+    depends_on:
+      - postgres
 
   order-service:
     container_name: order-service
@@ -66,6 +73,21 @@ services:
     depends_on:
       - postgres
 
+  mysql:
+    container_name: some-mysqll_5.7
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: baemin_post_shop_service
+      MYSQL_USER: root
+      MYSQL_PASSWORD: 1234
+    ports:
+      - 3307:3306
+    networks:
+      - node-network
+    volumes:
+      - ./volumes/mysql/data:/var/lib/mysql
+      - ./volumes/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
   postgres:
     container_name: some-ostgres
     image: postgres:latest
