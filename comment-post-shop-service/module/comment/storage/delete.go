@@ -18,7 +18,7 @@ func (s *sqlStorage) Delete(ctx context.Context, commentID int64) (int64, error)
 	if err != nil {
 		return 0, common.NewErrorRpcResponse(httpstatus.StatusInternalServerError, err)
 	}
-	rowAffect, _ := result.LastInsertId()
+	rowAffect, _ := result.RowsAffected()
 	if rowAffect == 0 {
 		return 0, common.NewErrorRpcResponse(httpstatus.StatusBadRequest, errors.New("not found comment"))
 	}

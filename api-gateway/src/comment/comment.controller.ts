@@ -45,7 +45,9 @@ export class CommentController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.commentService.remove(+id);
+  @UseGuards(AccessTokenGuard)
+  remove(@Param('id') id: string, @Req() req: Express.Request) {
+    const { sub } = req.user as TokenPayload;
+    return this.commentService.remove(+id, sub);
   }
 }

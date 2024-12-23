@@ -29,7 +29,7 @@ func DeleteComment(appCtx appcontext.AppContext, data int64, d *amqp.Delivery) {
 		}
 		publish.PublishMessage("", d.ReplyTo, d.CorrelationId, false, false, response, ch)
 	} else {
-		response, _ = json.Marshal(map[string]interface{}{"id": id})
+		response, _ = json.Marshal(map[string]interface{}{"rowAffect": id})
 		publish.PublishMessage("", d.ReplyTo, d.CorrelationId, false, false, response, ch)
 	}
 
