@@ -21,7 +21,7 @@ type Comment struct {
 
 type CommentCreate struct {
 	PostID  int64  `db:"post_id" json:"post_id"`
-	User    string `db:"user" json:"user"`
+	User    User   `db:"user" json:"user"`
 	Content string `db:"content" json:"content"`
 }
 
