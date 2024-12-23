@@ -17,7 +17,7 @@ func (s *sqlStore) DescreaseLike(ctx context.Context, postID int) error {
 	}
 	rowAffect, _ := result.RowsAffected()
 	if rowAffect == 0 {
-		return common.NewErrorRpcResponse(httpstatus.StatusBadRequest, errors.New("post not found"))
+		return common.NewErrorRpcResponse(httpstatus.StatusBadRequest, errors.New("post not found or cannot descrease like"))
 	}
 	return nil
 }
