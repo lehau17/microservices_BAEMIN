@@ -1,0 +1,40 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum StateVideo {
+  Publish
+  OnlyHaveUrl
+  Private
+}
+
+enum StateComment {
+  Allowed
+  Censor
+  Not_Allowed
+}
+
+model videos {
+  id                    Int            @id @default(autoincrement())
+  shop_id               Int         
+  title                 String        
+  url                   String
+  total_like            Int?       @default(0)    
+  total_share           Int?           @default(0)   
+  total_comments        Int?          @default(0)    
+  state_video              StateVideo     @default(Publish) // Use the enum value without `StateVideo.`
+  state_comment         StateComment   @default(Allowed) // Use the enum value without `StateComment.`
+  is_publish_total_like Boolean        @default(true) // Default value for boolean
+  is_publish_total_share Boolean        @default(true) // Default value for boolean
+  is_allow_share        Boolean        @default(true) // Default value for boolean
+  is_allow_dowload Boolean @default(true)
+  status                Int?           
+  created_at            DateTime       @default(now())
+  updated_at            DateTime       @default(now()) @updatedAt // Automatically update on modification
+  @@index([shop_id,title])
+}
