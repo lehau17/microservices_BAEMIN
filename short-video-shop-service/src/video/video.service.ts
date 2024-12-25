@@ -6,7 +6,7 @@ import { UpdateVideoDto } from './dto/update-video.dto';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { lastValueFrom } from 'rxjs';
 import { PagingDto } from 'src/common/paging/paging';
-import { Prisma, StateVideo } from '@prisma/client';
+import { Prisma, StateVideo, videos } from '@prisma/client';
 
 @Injectable()
 export class VideoService {
@@ -29,7 +29,7 @@ export class VideoService {
     return this.prismaService.videos.create({ data: createVideoDto });
   }
 
-  findAll({ cursor, limit = 20, skip = 0 }: PagingDto) {
+  findAll({ cursor, limit = 20, skip = 0 }: PagingDto): Promise<videos[]> {
     const options: Prisma.videosFindManyArgs = {
       take: limit,
       orderBy: {
@@ -56,8 +56,26 @@ export class VideoService {
     return this.prismaService.videos.findFirst({ where: { id, status: 1 } });
   }
 
-  update(id: number, updateVideoDto: UpdateVideoDto) {
-    return `This action updates a #${id} video`;
+  async update({ id, shop_id, ...payload }: UpdateVideoDto) {
+    const foundVideo = await this.findOne(id);
+    if (!foundVideo || foundVideo.status === 0) {
+      throw new RpcException({
+        message: 'Not found video',
+        statusCode: HttpStatus.BAD_REQUEST,
+      });
+    }
+    if (foundVideo.shop_id !== shop_id) {
+      throw new RpcException({
+        message: 'Forbidden',
+        statusCode: HttpStatus.FORBIDDEN,
+      });
+    }
+    return this.prismaService.videos.update({
+      where: {
+        id,
+      },
+      data: payload,
+    });
   }
 
   async remove(id: number, shop_id: number) {
