@@ -42,7 +42,9 @@ export class VideoController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.videoService.remove(+id);
+  @UseGuards(AccessTokenGuard)
+  remove(@Param('id') id: string, @Req() req: Express.Request) {
+    const { sub } = req.user as TokenPayload;
+    return this.videoService.remove(+id, sub);
   }
 }

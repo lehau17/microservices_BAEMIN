@@ -27,7 +27,9 @@ export class VideoService {
         statusCode: HttpStatus.BAD_REQUEST,
       });
     }
-    return this.prismaService.videos.create({ data: createVideoDto });
+    return this.prismaService.videos.create({
+      data: { ...createVideoDto, status: 1 },
+    });
   }
 
   findAll({ cursor, limit = 20, skip = 0 }: PagingDto): Promise<videos[]> {

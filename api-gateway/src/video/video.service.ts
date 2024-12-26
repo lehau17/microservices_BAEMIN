@@ -30,7 +30,11 @@ export class VideoService {
     return `This action updates a #${id} video`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} video`;
+  remove(id: number, shop_id: number) {
+    return lastValueFrom(
+      this.videoService
+        .send('removeVideo', { id, shop_id })
+        .pipe(handleRetryWithBackoff(3, 2000)),
+    );
   }
 }
