@@ -28,9 +28,9 @@ FROM node:20 AS build
 
 WORKDIR /root/app
 
-COPY package.json .
+COPY package.json yarn.lock ./
 
-RUN yarn install
+RUN yarn 
 
 COPY . .
 

@@ -5,11 +5,11 @@ import { CreateVideoDto } from './dto/create-video.dto';
 import { UpdateVideoDto } from './dto/update-video.dto';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { lastValueFrom } from 'rxjs';
-import { PagingDto } from 'src/common/paging/paging';
 import { Prisma, StateVideo, videos } from '@prisma/client';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import * as async from 'async';
 import { RedisService } from 'src/redis/redis.service';
+import { PagingDto } from 'src/common/paging/paging';
 @Injectable()
 export class VideoService {
   private readonly logger = new Logger(VideoService.name);
