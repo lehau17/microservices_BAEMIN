@@ -1,7 +1,7 @@
 # Stage 1: Build
-FROM golang:1.20-alpine AS builder
+FROM golang:latest AS builder
 
-WORKDIR /app
+WORKDIR /root/app
 
 COPY go.mod go.sum ./
 
@@ -13,7 +13,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build -ldflags "-s -w" -o main .
 
 FROM scratch
 
-COPY --from=builder /app/main /main
+COPY --from=builder /root/app/main /main
 
 # # Copy chứng chỉ SSL (nếu ứng dụng sử dụng HTTPS)
 # COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
