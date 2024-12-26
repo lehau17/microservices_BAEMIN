@@ -29,6 +29,7 @@ FROM node:20
 WORKDIR /root/product-service
 COPY package.json yarn.lock ./
 RUN yarn install
+COPY . .
 RUN yarn prisma generate 
 RUN yarn build
 
