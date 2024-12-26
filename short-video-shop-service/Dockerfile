@@ -26,7 +26,7 @@
 
 FROM node:20 AS build
 
-WORKDIR /root/user-service
+WORKDIR /root/app
 
 COPY package.json .
 
