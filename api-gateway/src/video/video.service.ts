@@ -51,6 +51,14 @@ export class VideoService {
     );
   }
 
+  increaseLike(id: number) {
+    return lastValueFrom(
+      this.videoService
+        .send('increaseLike', id)
+        .pipe(handleRetryWithBackoff(3, 2000)),
+    );
+  }
+
   remove(id: number, shop_id: number) {
     return lastValueFrom(
       this.videoService

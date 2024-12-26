@@ -54,4 +54,8 @@ export class VideoController {
   increaseView(@Param('id') id: string) {
     return this.videoService.increaseView(+id);
   }
+  @Patch(':id/like')
+  increaseLike(@Param('id') id: string) {
+    return this.videoService.increaseLike(+id);
+  }
 }
