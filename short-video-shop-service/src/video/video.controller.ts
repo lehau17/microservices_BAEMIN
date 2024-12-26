@@ -3,7 +3,7 @@ import { MessagePattern, Payload } from '@nestjs/microservices';
 import { VideoService } from './video.service';
 import { CreateVideoDto } from './dto/create-video.dto';
 import { UpdateVideoDto } from './dto/update-video.dto';
-import { PagingDto } from 'src/common/utils/paging/paging';
+import { PagingDto } from 'src/common/paging/paging';
 
 @Controller()
 export class VideoController {
