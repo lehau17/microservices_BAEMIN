@@ -8,12 +8,14 @@ import {
   Delete,
   UseGuards,
   Req,
+  Query,
 } from '@nestjs/common';
 import { VideoService } from './video.service';
 import { CreateVideoDto } from './dto/create-video.dto';
 import { UpdateVideoDto } from './dto/update-video.dto';
 import { AccessTokenGuard } from 'src/common/guards/accessToken.guard';
 import { TokenPayload } from 'src/common/dto/tokenPayload.jwt.dto';
+import { PagingDto } from 'src/common/dto/paging.dto';
 
 @Controller('video')
 export class VideoController {
@@ -27,8 +29,8 @@ export class VideoController {
   }
 
   @Get()
-  findAll() {
-    return this.videoService.findAll();
+  findAll(@Query() paging: PagingDto) {
+    return this.videoService.findAll(paging);
   }
 
   @Get(':id')

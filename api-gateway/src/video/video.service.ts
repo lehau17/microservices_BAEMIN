@@ -4,6 +4,7 @@ import { UpdateVideoDto } from './dto/update-video.dto';
 import { ClientProxy } from '@nestjs/microservices';
 import { lastValueFrom } from 'rxjs';
 import { handleRetryWithBackoff } from 'src/common/utils/handlerTimeoutWithBackoff';
+import { PagingDto } from 'src/common/dto/paging.dto';
 
 @Injectable()
 export class VideoService {
@@ -18,8 +19,12 @@ export class VideoService {
     );
   }
 
-  findAll() {
-    return `This action returns all video`;
+  findAll(paging: PagingDto) {
+    return lastValueFrom(
+      this.videoService
+        .send('findAllVideo', paging)
+        .pipe(handleRetryWithBackoff(3, 2000)),
+    );
   }
 
   findOne(id: number) {
