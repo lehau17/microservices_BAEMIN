@@ -164,7 +164,7 @@ services:
 
 networks:
   node-network:
-    external: true
+    driver: local
 
 volumes:
   postgres-data:
