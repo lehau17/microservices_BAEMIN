@@ -12,12 +12,13 @@ import { Prisma, StateVideo, videos } from '@prisma/client';
 export class VideoService {
   constructor(
     private readonly prismaService: PrismaService,
-    @Inject('RES_SERVICE') private readonly restaurantService: ClientProxy,
+    @Inject('RESTAURANT_SERVICE')
+    private readonly restaurantService: ClientProxy,
   ) {}
-  async create(createVideoDto: CreateVideoDto) {
+  async create(createVideoDto: CreateVideoDto): Promise<videos> {
     const foundShop = await lastValueFrom(
       this.restaurantService
-        .send('findOneShop', createVideoDto.shop_id)
+        .send('findOneRestaurant', createVideoDto.shop_id)
         .pipe(handleRetryWithBackoff(3, 1000)),
     );
     if (!foundShop) {
@@ -56,7 +57,7 @@ export class VideoService {
     return this.prismaService.videos.findFirst({ where: { id, status: 1 } });
   }
 
-  async update({ id, shop_id, ...payload }: UpdateVideoDto) {
+  async update({ id, shop_id, ...payload }: UpdateVideoDto): Promise<videos> {
     const foundVideo = await this.findOne(id);
     if (!foundVideo || foundVideo.status === 0) {
       throw new RpcException({
@@ -78,7 +79,7 @@ export class VideoService {
     });
   }
 
-  async remove(id: number, shop_id: number) {
+  async remove(id: number, shop_id: number): Promise<videos> {
     const foundVideo = await this.findOne(id);
     if (!foundVideo || foundVideo.status === 0) {
       throw new RpcException({

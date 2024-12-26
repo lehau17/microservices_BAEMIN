@@ -21,6 +21,7 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { PostModule } from './post/posts.module';
 import { CommentModule } from './comment/comment.module';
+import { VideoModule } from './video/video.module';
 
 @Global()
 @Module({
@@ -150,6 +151,7 @@ import { CommentModule } from './comment/comment.module';
     VoucherUsageModule,
     PostModule,
     CommentModule,
+    VideoModule,
   ],
   controllers: [AppController],
   providers: [

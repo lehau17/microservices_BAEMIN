@@ -5,3 +5,8 @@
 # chat giữa shop và user : mongoDB, chat-service
 
 # 1 shop sẽ có nhiều bài post quản bá shop post-shop-service : golang
+
+run service go
+
+1. go mod tidy
+2. make run
