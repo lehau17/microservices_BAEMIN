@@ -3,6 +3,7 @@ import { VideoService } from './video.service';
 import { VideoController } from './video.controller';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { RedisService } from 'src/redis/redis.service';
 
 @Module({
   imports: [
@@ -24,6 +25,6 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
     ]),
   ],
   controllers: [VideoController],
-  providers: [VideoService, PrismaService],
+  providers: [VideoService, PrismaService, RedisService],
 })
 export class VideoModule {}

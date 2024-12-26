@@ -43,6 +43,14 @@ export class VideoService {
     );
   }
 
+  increaseView(id: number) {
+    return lastValueFrom(
+      this.videoService
+        .send('increaseView', id)
+        .pipe(handleRetryWithBackoff(3, 2000)),
+    );
+  }
+
   remove(id: number, shop_id: number) {
     return lastValueFrom(
       this.videoService

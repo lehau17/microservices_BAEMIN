@@ -1,20 +1,96 @@
 import { handleRetryWithBackoff } from 'src/common/utils/handlerTimeoutWithBackoff';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { HttpStatus, Inject, Injectable, Logger } from '@nestjs/common';
 import { CreateVideoDto } from './dto/create-video.dto';
 import { UpdateVideoDto } from './dto/update-video.dto';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { lastValueFrom } from 'rxjs';
 import { PagingDto } from 'src/common/paging/paging';
 import { Prisma, StateVideo, videos } from '@prisma/client';
-
+import { Cron, CronExpression } from '@nestjs/schedule';
+import * as async from 'async';
+import { RedisService } from 'src/redis/redis.service';
 @Injectable()
 export class VideoService {
+  private readonly logger = new Logger(VideoService.name);
   constructor(
     private readonly prismaService: PrismaService,
     @Inject('RESTAURANT_SERVICE')
     private readonly restaurantService: ClientProxy,
+    private readonly redisService: RedisService,
   ) {}
+
+  @Cron(CronExpression.EVERY_30_SECONDS)
+  async updateView() {
+    // this.logger.debug('vào cron');
+    const client = this.redisService.getClient();
+    const pattern = 'video:*'; // Each video has a key like ' video:{id}'
+    let cursor = 0;
+    const batchSize = 1000;
+
+    const limit = async.queue(async (task: any, done) => {
+      const viewCount = await client.get(task.key);
+      const videoId = task.key.split(':')[1];
+      if (videoId && viewCount) {
+        try {
+          await this.updateViewInDatabase(+videoId, +viewCount);
+        } catch (error) {
+          this.logger.debug('Lỗi update view');
+        }
+      }
+      await client.del(task.key);
+      done();
+    }, 10); // Limit to 10 concurrent tasks
+
+    do {
+      const [newCursor, keys] = await client.scan(
+        cursor,
+        'MATCH',
+        pattern,
+        'COUNT',
+        batchSize,
+      );
+      if (keys.length <= 0) {
+        this.logger.debug('Không có view để update');
+        return;
+      }
+      cursor = parseInt(newCursor, 10);
+
+      keys.forEach((key) => {
+        limit.push({ key });
+      });
+    } while (cursor !== 0);
+
+    // Wait for all tasks to complete
+    await limit.drain();
+
+    this.logger.debug('Completed updating views');
+  }
+
+  private async updateViewInDatabase(video_id: number, view: number) {
+    await this.prismaService.videos.update({
+      where: {
+        id: video_id,
+      },
+      data: {
+        total_view: {
+          increment: view,
+        },
+      },
+    });
+  }
+
+  async increateViewRedis(id: number) {
+    const client = this.redisService.getClient();
+    const key = `video:${id}`;
+    const viewCount = await client.get(key);
+    if (viewCount && viewCount !== '') {
+      await client.set(key, +viewCount + 1);
+    } else {
+      await client.set(key, 1);
+    }
+  }
+
   async create(createVideoDto: CreateVideoDto): Promise<videos> {
     const foundShop = await lastValueFrom(
       this.restaurantService

@@ -33,4 +33,9 @@ export class VideoController {
   remove(@Payload() { id, shop_id }: { id: number; shop_id: number }) {
     return this.videoService.remove(id, shop_id);
   }
+
+  @MessagePattern('increaseView')
+  increaseView(@Payload() id: number) {
+    return this.videoService.increateViewRedis(id);
+  }
 }

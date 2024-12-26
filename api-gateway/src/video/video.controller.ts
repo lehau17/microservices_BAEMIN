@@ -49,4 +49,9 @@ export class VideoController {
     const { sub } = req.user as TokenPayload;
     return this.videoService.remove(+id, sub);
   }
+
+  @Patch(':id/view')
+  increaseView(@Param('id') id: string) {
+    return this.videoService.increaseView(+id);
+  }
 }
