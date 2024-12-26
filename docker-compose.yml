@@ -164,7 +164,7 @@ services:
 
 networks:
   node-network:
-    driver: local
+    driver: bridge
 
 volumes:
   postgres-data:
