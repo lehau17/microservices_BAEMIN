@@ -38,4 +38,9 @@ export class VideoController {
   increaseView(@Payload() id: number) {
     return this.videoService.increateViewRedis(id);
   }
+
+  @MessagePattern('increaseLike')
+  increaseLike(@Payload() id: number) {
+    return this.videoService.increateLikeRedis(id);
+  }
 }

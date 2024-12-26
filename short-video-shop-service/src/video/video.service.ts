@@ -153,6 +153,19 @@ export class VideoService {
     return result;
   }
 
+  async increateLikeRedis(id: number) {
+    const client = this.redisService.getClient();
+    const key = `video_like:${id}`;
+    const viewCount = await client.get(key);
+    let result: any;
+    if (viewCount && viewCount !== '') {
+      result = await client.set(key, +viewCount + 1);
+    } else {
+      result = await client.set(key, 1);
+    }
+    return result;
+  }
+
   async create(createVideoDto: CreateVideoDto): Promise<videos> {
     const foundShop = await lastValueFrom(
       this.restaurantService
