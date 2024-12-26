@@ -11,6 +11,23 @@ services:
     depends_on:
       - rabbitmq
 
+  cart-service:
+    container_name: cart-service
+    build: ./cart-service
+    networks:
+      - node-network
+    depends_on:
+      - postgres
+
+  comment-post-shop-service:
+    container_name: ./comment-post-shop-service
+    build: ./comment-post-shop-service
+    networks:
+      - node-network
+    depends_on:
+      - postgres
+      - redis
+
   notify-service:
     container_name: notify-service
     build: ./notify-service
@@ -25,6 +42,7 @@ services:
       - node-network
     depends_on:
       - mysql
+      - redis
 
   order-service:
     container_name: order-service
@@ -50,6 +68,22 @@ services:
       - node-network
     depends_on:
       - postgres
+  shipping-service:
+    container_name: shipping-service
+    build: ./shipping-service
+    networks:
+      - node-network
+    depends_on:
+      - redis
+      - postgres
+  short-video-shop-service:
+    container_name: short-video-shop-service
+    build: ./short-video-shop-service
+    networks:
+      - node-network
+    depends_on:
+      - postgres
+      - redis
 
   upload-service:
     container_name: upload-service
@@ -125,6 +159,8 @@ services:
     networks:
       - node-network
     command: ["redis-server", "--requirepass", "1234"] # Cấu hình Redis yêu cầu mật khẩu
+    volumes:
+      - redis-data:/data # Gắn volume 'redis-data' vào thư mục /data trong container
 
 networks:
   node-network:
@@ -133,3 +169,4 @@ networks:
 volumes:
   postgres-data:
   mysql-data:
+  redis-data:
