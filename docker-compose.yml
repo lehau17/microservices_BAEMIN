@@ -20,7 +20,7 @@ services:
       - postgres
 
   comment-post-shop-service:
-    container_name: ./comment-post-shop-service
+    container_name: comment-post-shop-service
     build: ./comment-post-shop-service
     networks:
       - node-network
