@@ -28,7 +28,11 @@ export class VideoService {
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} video`;
+    return lastValueFrom(
+      this.videoService
+        .send('findOneVideo', id)
+        .pipe(handleRetryWithBackoff(3, 2000)),
+    );
   }
 
   update(id: number, updateVideoDto: UpdateVideoDto) {
