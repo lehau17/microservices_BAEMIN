@@ -36,7 +36,11 @@ export class VideoService {
   }
 
   update(id: number, updateVideoDto: UpdateVideoDto) {
-    return `This action updates a #${id} video`;
+    return lastValueFrom(
+      this.videoService
+        .send('updateVideo', { id, ...updateVideoDto })
+        .pipe(handleRetryWithBackoff(3, 2000)),
+    );
   }
 
   remove(id: number, shop_id: number) {
