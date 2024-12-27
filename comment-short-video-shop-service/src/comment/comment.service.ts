@@ -1,9 +1,10 @@
 import { PagingDto } from 'src/common/dto/paging.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { comment_videos, Prisma } from '@prisma/client';
+import { RpcException } from '@nestjs/microservices';
 
 @Injectable()
 export class CommentService {
@@ -38,12 +39,27 @@ export class CommentService {
     return this.prismaService.comment_videos.findMany(options);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} comment`;
+  findOne(id: number): Promise<comment_videos> {
+    return this.prismaService.comment_videos.findFirst({
+      where: {
+        id,
+      },
+    });
   }
 
-  update(id: number, updateCommentDto: UpdateCommentDto) {
-    return `This action updates a #${id} comment`;
+  async update({
+    id,
+    content,
+    user_id,
+  }: UpdateCommentDto): Promise<comment_videos> {
+    const foundComment = await this.findOne(id);
+    if (!foundComment || foundComment.status === 0) {
+      throw new RpcException({
+        message: 'Not found comment',
+        statusCode: HttpStatus.BAD_REQUEST,
+      });
+    }
+    return foundComment;
   }
 
   remove(id: number) {

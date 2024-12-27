@@ -22,6 +22,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { PostModule } from './post/posts.module';
 import { CommentModule } from './comment/comment.module';
 import { VideoModule } from './video/video.module';
+import { CommentVideoModule } from './comment_video/comment_video.module';
 
 @Global()
 @Module({
@@ -152,6 +153,7 @@ import { VideoModule } from './video/video.module';
     PostModule,
     CommentModule,
     VideoModule,
+    CommentVideoModule,
   ],
   controllers: [AppController],
   providers: [

@@ -1,44 +1,36 @@
 import { PagingDto } from 'src/common/dto/paging.dto';
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { CommentService } from './comment.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
-import { Payload } from '@nestjs/microservices';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 
-@Controller('comment')
+@Controller()
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
-  @Post()
-  create(@Body() createCommentDto: CreateCommentDto) {
+  @MessagePattern('createComment')
+  create(@Payload() createCommentDto: CreateCommentDto) {
     return this.commentService.create(createCommentDto);
   }
 
-  @Get()
+  @MessagePattern('findAllComment')
   findAll(@Payload() paging: PagingDto & { video_id: number }) {
     return this.commentService.findAll(paging);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
+  @MessagePattern('findOneComment')
+  findOne(@Payload('id') id: string) {
     return this.commentService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCommentDto: UpdateCommentDto) {
-    return this.commentService.update(+id, updateCommentDto);
+  @MessagePattern('updateComment')
+  update(@Payload() updateCommentDto: UpdateCommentDto) {
+    return this.commentService.update(updateCommentDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
+  @MessagePattern('deleteComment')
+  remove(@Payload('id') id: string) {
     return this.commentService.remove(+id);
   }
 }

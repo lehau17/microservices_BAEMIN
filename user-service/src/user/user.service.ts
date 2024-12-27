@@ -80,6 +80,7 @@ export class UserService {
         {
           sub: user.id,
           username: user.usr_email,
+          avatar: user.usr_avatar,
           role: {
             id: user.role.id,
             role_name: user.role.role_name,
