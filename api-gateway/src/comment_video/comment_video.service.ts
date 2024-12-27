@@ -48,7 +48,11 @@ export class CommentVideoService {
     );
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} commentVideo`;
+  remove(id: number, user_id: number) {
+    return lastValueFrom(
+      this.commentVideoService
+        .send('deleteComment', { id, user_id })
+        .pipe(handleRetryWithBackoff(3, 1500)),
+    );
   }
 }

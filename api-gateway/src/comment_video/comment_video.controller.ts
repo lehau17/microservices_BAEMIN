@@ -53,7 +53,9 @@ export class CommentVideoController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.commentVideoService.remove(+id);
+  @UseGuards(AccessTokenGuard)
+  remove(@Param('id') id: string, @Req() req: Express.Request) {
+    const { sub } = req.user as TokenPayload;
+    return this.commentVideoService.remove(+id, sub);
   }
 }

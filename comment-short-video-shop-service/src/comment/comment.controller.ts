@@ -30,7 +30,7 @@ export class CommentController {
   }
 
   @MessagePattern('deleteComment')
-  remove(@Payload('id') id: string) {
-    return this.commentService.remove(+id);
+  remove(@Payload() { id, user_id }: { id: number; user_id: number }) {
+    return this.commentService.remove(+id, +user_id);
   }
 }
