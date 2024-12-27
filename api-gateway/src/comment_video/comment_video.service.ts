@@ -5,6 +5,7 @@ import { UpdateCommentVideoDto } from './dto/update-comment_video.dto';
 import { lastValueFrom } from 'rxjs';
 import { handleRetryWithBackoff } from 'src/common/utils/handlerTimeoutWithBackoff';
 import { TokenPayload } from 'src/common/dto/tokenPayload.jwt.dto';
+import { PagingDto } from 'src/common/dto/paging.dto';
 
 @Injectable()
 export class CommentVideoService {
@@ -23,8 +24,12 @@ export class CommentVideoService {
     );
   }
 
-  findAll() {
-    return `This action returns all commentVideo`;
+  findAll(video_id: number, paging: PagingDto) {
+    return lastValueFrom(
+      this.commentVideoService
+        .send('findAllComment', { ...paging, video_id })
+        .pipe(handleRetryWithBackoff(3, 1500)),
+    );
   }
 
   findOne(id: number) {
