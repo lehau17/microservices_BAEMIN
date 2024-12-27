@@ -1,5 +1,6 @@
 export type TokenPayload = {
   sub: number;
+  avatar: string;
   username: string;
   role: {
     id: number;

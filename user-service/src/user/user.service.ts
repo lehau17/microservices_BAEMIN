@@ -1,10 +1,4 @@
-import { roles } from './../../node_modules/.prisma/client/index.d';
-import {
-  BadRequestException,
-  HttpStatus,
-  Inject,
-  Injectable,
-} from '@nestjs/common';
+import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -27,13 +21,13 @@ export class UserService {
     @Inject('MAIL_SERVICE') private mailService: ClientProxy,
   ) {}
   create(createUserDto: CreateUserDto) {
-    //check email
     return this.prisma.users.create({
       data: {
         ...createUserDto,
         usr_password: createHmac('sha256', createUserDto.usr_password).digest(
           'hex',
         ),
+        usr_avatar: 'https://robohash.org/username',
         role: {
           connect: {
             id: 1,
@@ -114,14 +108,11 @@ export class UserService {
   }
 
   async register(createUserDto: CreateUserDto) {
-    console.log(createUserDto);
-    //fimd by email
     const foundUser = await this.prisma.users.findFirst({
       where: {
         usr_email: createUserDto.usr_email,
       },
     });
-    console.log(foundUser);
     if (foundUser && foundUser.usr_username === createUserDto.usr_username) {
       throw new RpcException({
         message: 'Email or username already exists',
@@ -142,7 +133,6 @@ export class UserService {
         },
       },
     });
-    // create cart
     this.cartService.emit('createCart', newUser.id).pipe();
     this.mailService.emit('sendMail', {
       to: newUser.usr_email,

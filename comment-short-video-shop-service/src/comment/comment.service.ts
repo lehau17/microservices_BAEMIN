@@ -1,15 +1,42 @@
 import { PagingDto } from 'src/common/dto/paging.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { comment_videos, Prisma } from '@prisma/client';
-import { RpcException } from '@nestjs/microservices';
+import { ClientProxy, RpcException } from '@nestjs/microservices';
+import { lastValueFrom } from 'rxjs';
+import { VideoDto } from 'src/common/dto/video.dto';
+import { handleRetryWithBackoff } from 'src/common/utils/handlerTimeoutWithBackoff';
 
 @Injectable()
 export class CommentService {
-  constructor(private readonly prismaService: PrismaService) {}
-  create(createCommentDto: CreateCommentDto): Promise<comment_videos> {
+  constructor(
+    private readonly prismaService: PrismaService,
+    @Inject('SHORT_VIDEO_SERVICE')
+    private readonly shortVideoService: ClientProxy,
+  ) {}
+  async create(createCommentDto: CreateCommentDto): Promise<comment_videos> {
+    const foundVideo = await lastValueFrom<VideoDto>(
+      this.shortVideoService
+        .send('findOneVideo', createCommentDto.video_id)
+        .pipe(handleRetryWithBackoff(3, 1000)),
+    );
+    if (!foundVideo || foundVideo.status === 0) {
+      throw new RpcException({
+        message: 'Not found video',
+        statusCode: HttpStatus.BAD_REQUEST,
+      });
+    }
+    if (createCommentDto.parent_id) {
+      const foundParentComment = await this.findOne(createCommentDto.parent_id);
+      if (!foundParentComment) {
+        throw new RpcException({
+          message: 'Not found parent comment',
+          statusCode: HttpStatus.BAD_REQUEST,
+        });
+      }
+    }
     return this.prismaService.comment_videos.create({
       data: { ...createCommentDto, status: 1 },
     });

@@ -9,7 +9,7 @@ import { MessagePattern, Payload } from '@nestjs/microservices';
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
-  @MessagePattern('createComment')
+  @MessagePattern('createCommentVideo')
   create(@Payload() createCommentDto: CreateCommentDto) {
     return this.commentService.create(createCommentDto);
   }

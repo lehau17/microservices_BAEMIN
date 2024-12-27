@@ -1,15 +1,32 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+  Req,
+} from '@nestjs/common';
 import { CommentVideoService } from './comment_video.service';
 import { CreateCommentVideoDto } from './dto/create-comment_video.dto';
 import { UpdateCommentVideoDto } from './dto/update-comment_video.dto';
+import { AccessTokenGuard } from 'src/common/guards/accessToken.guard';
+import { TokenPayload } from 'src/common/dto/tokenPayload.jwt.dto';
 
 @Controller('comment-video')
 export class CommentVideoController {
   constructor(private readonly commentVideoService: CommentVideoService) {}
 
   @Post()
-  create(@Body() createCommentVideoDto: CreateCommentVideoDto) {
-    return this.commentVideoService.create(createCommentVideoDto);
+  @UseGuards(AccessTokenGuard)
+  create(
+    @Body() createCommentVideoDto: CreateCommentVideoDto,
+    @Req() req: Express.Request,
+  ) {
+    const tokenPayload = req.user as TokenPayload;
+    return this.commentVideoService.create(createCommentVideoDto, tokenPayload);
   }
 
   @Get()
@@ -23,7 +40,10 @@ export class CommentVideoController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCommentVideoDto: UpdateCommentVideoDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateCommentVideoDto: UpdateCommentVideoDto,
+  ) {
     return this.commentVideoService.update(+id, updateCommentVideoDto);
   }
 
