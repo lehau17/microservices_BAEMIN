@@ -36,8 +36,16 @@ export class CommentVideoService {
     return `This action returns a #${id} commentVideo`;
   }
 
-  update(id: number, updateCommentVideoDto: UpdateCommentVideoDto) {
-    return `This action updates a #${id} commentVideo`;
+  update(
+    id: number,
+    updateCommentVideoDto: UpdateCommentVideoDto,
+    user_id: number,
+  ) {
+    return lastValueFrom(
+      this.commentVideoService
+        .send('updateComment', { ...updateCommentVideoDto, id, user_id })
+        .pipe(handleRetryWithBackoff(3, 1500)),
+    );
   }
 
   remove(id: number) {

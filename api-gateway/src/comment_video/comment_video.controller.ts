@@ -42,11 +42,14 @@ export class CommentVideoController {
   }
 
   @Patch(':id')
+  @UseGuards(AccessTokenGuard)
   update(
     @Param('id') id: string,
     @Body() updateCommentVideoDto: UpdateCommentVideoDto,
+    @Req() req: Express.Request,
   ) {
-    return this.commentVideoService.update(+id, updateCommentVideoDto);
+    const { sub } = req.user as TokenPayload;
+    return this.commentVideoService.update(+id, updateCommentVideoDto, sub);
   }
 
   @Delete(':id')

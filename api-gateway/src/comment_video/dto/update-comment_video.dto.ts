@@ -1,4 +1,9 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateCommentVideoDto } from './create-comment_video.dto';
+import { IsNotEmpty, IsString } from 'class-validator';
 
-export class UpdateCommentVideoDto extends PartialType(CreateCommentVideoDto) {}
+export class UpdateCommentVideoDto {
+  @IsString()
+  @IsNotEmpty()
+  content: string;
+}

@@ -86,7 +86,23 @@ export class CommentService {
         statusCode: HttpStatus.BAD_REQUEST,
       });
     }
-    return foundComment;
+    const user = foundComment.user as any;
+    console.log(user);
+    console.log(user_id);
+    if (user.id !== user_id) {
+      throw new RpcException({
+        statusCode: HttpStatus.FORBIDDEN,
+        message: 'forbidden user',
+      });
+    }
+    return this.prismaService.comment_videos.update({
+      where: {
+        id: id,
+      },
+      data: {
+        content,
+      },
+    });
   }
 
   remove(id: number) {
